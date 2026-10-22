@@ -2,16 +2,16 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-An open-source **ChatGPT connector for personal WPS cloud documents**. Ask for work in a ChatGPT conversation; a hosted MCP service calls WPS's personal cloud interface on the connected user's behalf. Files stay in WPS cloud. The connector returns real WPS links and checks results after writes.
-
-**Cloud workflow, not local desktop automation:** no local WPS installation, always-on computer, desktop macro runner, or local callback port is required. The connector can use only capabilities exposed by the WPS cloud interface and granted to the account; it does not mirror every desktop WPS feature.
+An open-source **ChatGPT connector for personal WPS cloud documents**. Ask in ChatGPT; the hosted service calls WPS cloud, verifies the result, and returns a WPS link. No local WPS installation or always-on computer is required.
 
 **At a glance**
 
-- **Use it from ChatGPT:** request work from supported web, desktop, or mobile plugin surfaces; voice-triggered tool use depends on the ChatGPT mode available to your account. [Platform availability](https://learn.chatgpt.com/docs/plugins)
-- **Keep the computer off:** the hosted service handles bounded workflows without a local WPS process. Long or asynchronous jobs may need a later status check.
-- **Limit the connector surface:** it needs no local file or Shell access. WPS cloud access follows the connected account's actual authorization; publishing and sharing receive separate review.
-- **Check the result:** return a real WPS link, read back the output where possible, and protect writes from accidental duplicate execution.
+- **Cross-device:** use supported ChatGPT web, desktop, or mobile surfaces; voice-triggered tools depend on the available mode. [Availability](https://learn.chatgpt.com/docs/plugins)
+- **Cloud execution:** your computer can sleep; long jobs may need a later status check.
+- **Focused access:** no local files or Shell; WPS access follows the account's actual authorization.
+- **Verifiable output:** real WPS links, readback checks, and duplicate-write protection.
+
+Cloud API limits still apply; this connector does not reproduce every desktop WPS feature. Publishing and sharing receive separate review.
 
 **Independent community project. Not made by or endorsed by WPS or OpenAI.** This repository is public source code; the hosted connector is currently private. A public ChatGPT Directory listing has **not** been approved or published. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) say unofficial third-party connectors are not eligible for approval without appropriate authorization.
 
