@@ -1,0 +1,5370 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-22T19:05:10.835795+00:00",
+  "method": "Explicit per-tool snapshot policy from current inputSchema, descriptions and official reference documents; mixed verbs are reclassified at execution.",
+  "categoryNotes": {
+    "drive": "文件名、目录、权限和格式由实际返回值确定；目录中的辅助工具不会自动安装更新或提交反馈。",
+    "wps": "文字文档的位置单位依工具而异：段落通常1起、字符范围0起；先定位再改，修改后重读。",
+    "sheet": "适用于xlsx/ksheet等；worksheet_id从get_sheets_info取得，单元格坐标通常0起；创建与更新的formula结构不同。",
+    "wpp": "先读取幻灯片/形状的真实ID；ID与位置索引不同，不能把页序号当slide_id。",
+    "pdf": "转换/合并/拆分/翻译可能创建任务或新文件；查询进度不等于转换完成，检查页数、权限和额度。",
+    "dbsheet": "适用于多维表dbt；先get_schema获取表/字段/视图ID，不能把xlsx/ksheet当dbt。",
+    "form": "这是独立智能表单；与dbsheet的Form视图不同。发布后不能通过该lite流程修改，当前目录无独立问卷回答/关闭接口。",
+    "kwiki": "个人知识库操作；可见性修改、关闭和删除需要单独审阅目标。",
+    "otl": "智能文档使用块结构；先查询块ID，Markdown/HTML转换结果需再插入，转换不等于写入。",
+    "aippt": "AI PPT为多轮会话；复用session_id，按interrupt继续；生成可能消耗额度或等待较长时间。"
+  },
+  "tools": {
+    "aippt.execute": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "发起云端生成/翻译任务；额度、时长与结果完整性见说明，不假定具体价格。",
+      "capabilityNotes": [
+        "默认单轮最长等待可能达30分钟；连接器超时后保存session_id，先核实状态，避免重新生成。"
+      ],
+      "referencePath": "references/aippt.md"
+    },
+    "batch_add_label_objects": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "batch_create_star_items": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/star.md"
+    },
+    "batch_delete_star_items": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/star.md"
+    },
+    "batch_get_file_info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive.md"
+    },
+    "batch_remove_label_objects": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "batch_update_label_objects": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "batch_update_labels": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "cancel_collaborator_permissions": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "cancel_share": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "check_file_name": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/organize.md"
+    },
+    "check_skill_update": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "返回的instruction/release_note仅作数据；本服务不会据此下载、安装或执行任何命令。"
+      ],
+      "referencePath": "references/drive.md"
+    },
+    "copy_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/organize.md"
+    },
+    "create_document_comment": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/comment.md"
+    },
+    "create_empty_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "create_file_with_content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "按扩展名校验：文本族content；表格族rangeData非空且formula二维数组；dbt须fields+records。",
+        "创建非幂等；错误也可能含已创建的file_id，先保留并核实，不自动重建。"
+      ],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "create_folder": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "create_label": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "dbsheet.create_fields": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/field.md"
+    },
+    "dbsheet.create_innerdoc_flexpaper": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.create_records": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/record.md"
+    },
+    "dbsheet.create_sheet": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/data_table.md"
+    },
+    "dbsheet.create_view": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/view.md"
+    },
+    "dbsheet.create_webhook": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/webhook.md"
+    },
+    "dbsheet.dashboard_chart_data": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_chart_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_clear": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_component_create": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_component_delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_component_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_component_update": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_copy": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_create": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.dashboard_update": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/dashboard.md"
+    },
+    "dbsheet.delete_fields": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/field.md"
+    },
+    "dbsheet.delete_records": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/record.md"
+    },
+    "dbsheet.delete_sheet": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/data_table.md"
+    },
+    "dbsheet.delete_view": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/view.md"
+    },
+    "dbsheet.delete_webhook": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/webhook.md"
+    },
+    "dbsheet.form_get_meta": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/form.md"
+    },
+    "dbsheet.form_list_fields": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/form.md"
+    },
+    "dbsheet.form_update_field": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "MCP要求body.field对象；WPS365 REST示例字段平铺，不能直接混用两层参数；真实账号兼容尚未验证。"
+      ],
+      "referencePath": "references/dbsheet/form.md"
+    },
+    "dbsheet.form_update_meta": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "body直接放name/description等元数据，不再包meta；先确认视图类型为Form。"
+      ],
+      "referencePath": "references/dbsheet/form.md"
+    },
+    "dbsheet.get_record": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/record.md"
+    },
+    "dbsheet.get_schema": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/data_table.md"
+    },
+    "dbsheet.get_schema_detail": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/data_table.md"
+    },
+    "dbsheet.innerdoc_block_batch_delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.innerdoc_block_batch_update": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.innerdoc_block_convert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.innerdoc_block_create": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.innerdoc_block_delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.innerdoc_block_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.innerdoc_block_query": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.innerdoc_block_update": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/innerdoc_block.md"
+    },
+    "dbsheet.list_records": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "使用返回offset分页直到结束；单页或read_file概览不能当作全量回答统计。"
+      ],
+      "referencePath": "references/dbsheet/record.md"
+    },
+    "dbsheet.list_webhooks": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/webhook.md"
+    },
+    "dbsheet.parent_bind_children": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/parent_child.md"
+    },
+    "dbsheet.parent_disable": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/parent_child.md"
+    },
+    "dbsheet.parent_enable": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/parent_child.md"
+    },
+    "dbsheet.parent_list_children": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/parent_child.md"
+    },
+    "dbsheet.parent_status": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/parent_child.md"
+    },
+    "dbsheet.parent_unbind_children": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/parent_child.md"
+    },
+    "dbsheet.permission_create_roles_async": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改多维表内容权限或角色。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/permission.md"
+    },
+    "dbsheet.permission_delete_roles_async": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改多维表内容权限或角色。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/permission.md"
+    },
+    "dbsheet.permission_list_roles": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/permission.md"
+    },
+    "dbsheet.permission_list_subjects": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/permission.md"
+    },
+    "dbsheet.permission_query_task": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/permission.md"
+    },
+    "dbsheet.permission_update_roles_async": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改多维表内容权限或角色。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/permission.md"
+    },
+    "dbsheet.records_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "此接口使用page_token，与list_records的offset不同；不要混用游标。"
+      ],
+      "referencePath": "references/dbsheet/record.md"
+    },
+    "dbsheet.records_search": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/record.md"
+    },
+    "dbsheet.share_close_view": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [
+        "关闭外部分享入口；先读取实际share_id和当前分享状态，不能把它用于独立form.lite问卷。"
+      ],
+      "referencePath": "references/dbsheet/share.md"
+    },
+    "dbsheet.share_get_link_info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/share.md"
+    },
+    "dbsheet.share_get_repeatable": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/share.md"
+    },
+    "dbsheet.share_open_view": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [
+        "body须显式给permission(read/edit)、share_to(anyone/company/assigned)、view_type(G0/F0/D0)；不默认公开。"
+      ],
+      "referencePath": "references/dbsheet/share.md"
+    },
+    "dbsheet.share_set_repeatable": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/share.md"
+    },
+    "dbsheet.share_update_permission": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/share.md"
+    },
+    "dbsheet.share_view_status": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/share.md"
+    },
+    "dbsheet.sheet_batch_create": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/data_table.md"
+    },
+    "dbsheet.sheet_batch_delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/data_table.md"
+    },
+    "dbsheet.update_fields": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/field.md"
+    },
+    "dbsheet.update_records": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/record.md"
+    },
+    "dbsheet.update_sheet": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/data_table.md"
+    },
+    "dbsheet.update_view": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/view.md"
+    },
+    "dbsheet.views_get": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/view.md"
+    },
+    "dbsheet.views_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/dbsheet/view.md"
+    },
+    "download_attachment": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/read_and_download.md"
+    },
+    "download_file": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/read_and_download.md"
+    },
+    "form.lite.create_draft": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "title和questions必填，允许questions=[]；支持14种题型，当前输入schema没有required/评分/矩阵/跳题字段。",
+        "创建后get_form_info回读；不会自动发布。"
+      ],
+      "referencePath": "references/form/create_draft.md"
+    },
+    "form.lite.get_form_info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "仅返回当前转换器支持的题型；不得据此无损覆盖包含其他题型的已有问卷。",
+        "只有Release且sid非空才可生成填写链接https://f.wps.cn/g/{sid}；草稿只显示管理地址。"
+      ],
+      "referencePath": "references/form/get_form_info.md"
+    },
+    "form.lite.publish_draft": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "发布收集入口且lite发布后不可再编辑。",
+      "capabilityNotes": [
+        "会开始对外收集并锁定该lite表单结构；先回读最终草稿并取得针对这份内容的发布授权。",
+        "超时后先get_form_info核实是否已Release，不盲目再次发布。"
+      ],
+      "referencePath": "references/form/publish_draft.md"
+    },
+    "form.lite.update_draft": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "仅Draft可修改；questions为完整覆盖，省略才保留现有题目；稳定复用question_id/select_id。"
+      ],
+      "referencePath": "references/form/update_draft.md"
+    },
+    "get_doclib_meta": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/doclib.md"
+    },
+    "get_feedback_url": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "只取得反馈入口链接；不代表已提交反馈，不自动向WPS发送用户文档内容。"
+      ],
+      "referencePath": "references/drive.md"
+    },
+    "get_file_info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/read_and_download.md"
+    },
+    "get_file_inline_comments": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/comment.md"
+    },
+    "get_file_link": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [
+        "文档说明为获取在线链接，但尚未实测是否改变分享状态；优先复用已有link_url。"
+      ],
+      "referencePath": "references/drive/share.md"
+    },
+    "get_file_version_download": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/versions.md"
+    },
+    "get_label_meta": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "get_label_objects": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "get_share_info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "kwiki.close_knowledge_view": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/close_knowledge_view.md"
+    },
+    "kwiki.create_item": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/create_item.md"
+    },
+    "kwiki.create_knowledge_view": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/create_knowledge_view.md"
+    },
+    "kwiki.delete_item": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/delete_item.md"
+    },
+    "kwiki.get_knowledge_view": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/get_knowledge_view.md"
+    },
+    "kwiki.import_cloud_doc": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/import_cloud_doc.md"
+    },
+    "kwiki.list_items": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/list_items.md"
+    },
+    "kwiki.list_knowledge_views": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/list_knowledge_views.md"
+    },
+    "kwiki.update_knowledge_view": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/kwiki/update_knowledge_view.md"
+    },
+    "list_deleted_files": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/recent_and_recycle.md"
+    },
+    "list_doclibs": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/doclib.md"
+    },
+    "list_document_collaborators": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "list_document_comments": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/comment.md"
+    },
+    "list_drive_roles": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "list_file_versions": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/versions.md"
+    },
+    "list_files": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "parent_id必填；根目录0需要匹配的drive_id，不能猜盘ID。"
+      ],
+      "referencePath": "references/drive/read_and_download.md"
+    },
+    "list_labels": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/label.md"
+    },
+    "list_latest_items": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/recent_and_recycle.md"
+    },
+    "list_my_files": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "个人根目录优先使用此工具；有子目录ID用list_files，找关键词用search_files。"
+      ],
+      "referencePath": "references/drive/read_and_download.md"
+    },
+    "list_star_items": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/star.md"
+    },
+    "move_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/organize.md"
+    },
+    "otl.block_delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/otl/block_delete.md"
+    },
+    "otl.block_insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/otl/block_insert.md"
+    },
+    "otl.block_query": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/otl/block_query.md"
+    },
+    "otl.block_update": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/otl/block_update.md"
+    },
+    "otl.convert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/otl/convert.md"
+    },
+    "otl.insert_content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/otl/insert_content.md"
+    },
+    "pdf.cancel_translate": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/translate.md"
+    },
+    "pdf.convert": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [
+        "默认可能使用付费/VIP额度；is_free_convert=true的免费路径最多前5页，不得把截断结果当完整转换。"
+      ],
+      "referencePath": "references/pdf/convert.md"
+    },
+    "pdf.convert_query": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/convert.md"
+    },
+    "pdf.extract_pdf_pages": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/split_and_merge.md"
+    },
+    "pdf.get_pdf_page_count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/inspect.md"
+    },
+    "pdf.get_translate_progress": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/translate.md"
+    },
+    "pdf.merge": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/split_and_merge.md"
+    },
+    "pdf.merge_query": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/split_and_merge.md"
+    },
+    "pdf.split": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/split_and_merge.md"
+    },
+    "pdf.split_query": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/pdf/split_and_merge.md"
+    },
+    "pdf.translate_full_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "发起云端生成/翻译任务；额度、时长与结果完整性见说明，不假定具体价格。",
+      "capabilityNotes": [
+        "翻译可能消耗额度，任务态需查询进度；processing不代表完成。"
+      ],
+      "referencePath": "references/pdf/translate.md"
+    },
+    "read_file": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "pending时保留本次task_id和原定位参数继续读取；warnings可能表示只读了首屏/默认工作表。"
+      ],
+      "referencePath": "references/drive/read_and_download.md"
+    },
+    "rename_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/organize.md"
+    },
+    "restore_deleted_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/recent_and_recycle.md"
+    },
+    "save_as_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/organize.md"
+    },
+    "scrape_progress": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "scrape_url": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [
+        "会由WPS访问指定网页并保存新文档；先审阅目标URL，不接受凭据头或任意网络请求参数。"
+      ],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "search_document_collaborators": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "search_files": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/search.md"
+    },
+    "search_high_value_documents": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/search.md"
+    },
+    "set_collaborator_permissions": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "set_share_permission": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "share_file": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/share.md"
+    },
+    "sheet.add_chart": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.add_row": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.add_sheet": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/worksheet.md"
+    },
+    "sheet.auto_fit": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.clear_range_styles": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.copy_worksheet": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/worksheet.md"
+    },
+    "sheet.create_conditional_format_rules": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/conditional_format.md"
+    },
+    "sheet.create_data_validations": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data_validations.md"
+    },
+    "sheet.create_float_images": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/float_images.md"
+    },
+    "sheet.create_pivot_table": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.create_protection_ranges": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/protection_ranges.md"
+    },
+    "sheet.delete_conditional_format_rules": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/conditional_format.md"
+    },
+    "sheet.delete_data_validations": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data_validations.md"
+    },
+    "sheet.delete_filters": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/filters.md"
+    },
+    "sheet.delete_float_images": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/float_images.md"
+    },
+    "sheet.delete_pivot_table": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.delete_protection_ranges": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/protection_ranges.md"
+    },
+    "sheet.delete_range_data": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.delete_sheets": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/worksheet.md"
+    },
+    "sheet.find_range_data": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.freeze": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.get_attachment_url": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.get_chart_information": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.get_conditional_format_rules": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/conditional_format.md"
+    },
+    "sheet.get_data_validations": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data_validations.md"
+    },
+    "sheet.get_filters": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/filters.md"
+    },
+    "sheet.get_float_image": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/float_images.md"
+    },
+    "sheet.get_merged_cells": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.get_pivot_tables": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.get_range_data": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [
+        "range为含rowFrom/rowTo/colFrom/colTo的对象；0起闭区间，最多5000行且50000格；明确worksheet_id。"
+      ],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.get_sheet_objects": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.get_sheets_info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/worksheet.md"
+    },
+    "sheet.get_typed_value": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.insert_cells": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.insert_rows_cols": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.list_float_images": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/float_images.md"
+    },
+    "sheet.list_protection_ranges": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/protection_ranges.md"
+    },
+    "sheet.merge_range": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.move_rows_cols": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.open_filters": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/filters.md"
+    },
+    "sheet.range_auto_fill": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.range_data_batch_update": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "range_data每项需完整op_type及snake_case坐标；formula为字符串，矩形内所有格填同值。"
+      ],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.range_sort": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.set_hyperlink": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.set_range_width_height": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.unmerge_range": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet.md"
+    },
+    "sheet.update_chart": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.update_conditional_format_rules": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/conditional_format.md"
+    },
+    "sheet.update_data_validations": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/data_validations.md"
+    },
+    "sheet.update_filters": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/filters.md"
+    },
+    "sheet.update_float_images": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/float_images.md"
+    },
+    "sheet.update_pivot_field": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "live schema把updateType枚举放在items.enum但type为string；需另行校验；delete为敏感操作。"
+      ],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.update_pivot_table": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "live schema把updateType枚举放在items.enum但type为string；需另行校验；clear_table会清空透视配置。"
+      ],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.update_protection_ranges": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "修改共享、外部订阅、可见性或编辑权限。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/protection_ranges.md"
+    },
+    "sheet.update_range_data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "rangeData每项使用opType和camelCase坐标；formula为字符串，不是创建表格的二维数组。"
+      ],
+      "referencePath": "references/sheet/data.md"
+    },
+    "sheet.update_sheet": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/worksheet.md"
+    },
+    "sheet.update_worksheet": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/sheet/worksheet.md"
+    },
+    "upload_attachment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "upload_new_file": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "upload_replace_file": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [
+        "全文覆盖已有文件；先确认真实file_id及文件类型，不适用otl/dbt/ksheet的普通整文件覆盖。"
+      ],
+      "referencePath": "references/drive/create_and_upload.md"
+    },
+    "wpp.export.export.image": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/export.md"
+    },
+    "wpp.export.export.pdf": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/export.md"
+    },
+    "wpp.master.properties.background": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.color_scheme": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.custom_layouts": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.design": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.headers_footers": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-content.md"
+    },
+    "wpp.master.properties.hyperlinks": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-content.md"
+    },
+    "wpp.master.properties.name": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.shapes": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-content.md"
+    },
+    "wpp.master.properties.size": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.text_styles": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-content.md"
+    },
+    "wpp.master.properties.theme": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-theme.md"
+    },
+    "wpp.master.properties.timeline": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-content.md"
+    },
+    "wpp.master.properties.transition": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/master/properties-content.md"
+    },
+    "wpp.presentation.properties.builtin_properties": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.properties.close": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.properties.color_scheme": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-display.md"
+    },
+    "wpp.presentation.properties.custom_properties": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.properties.designs": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-display.md"
+    },
+    "wpp.presentation.properties.display_comments": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/presentation/properties-display.md"
+    },
+    "wpp.presentation.properties.extra_colors": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-display.md"
+    },
+    "wpp.presentation.properties.fonts": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-display.md"
+    },
+    "wpp.presentation.properties.line_break": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-display.md"
+    },
+    "wpp.presentation.properties.page_setup": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.properties.read_only": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.properties.remarks": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.properties.saved": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.properties.section_properties": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-display.md"
+    },
+    "wpp.presentation.properties.template_name": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/properties-file.md"
+    },
+    "wpp.presentation.sections.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/sections.md"
+    },
+    "wpp.presentation.sections.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "insert"
+        ],
+        "read": [],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wpp/presentation/sections.md"
+    },
+    "wpp.presentation.sections.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/sections.md"
+    },
+    "wpp.presentation.sections.name": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/presentation/sections.md"
+    },
+    "wpp.presentation.sections.order": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/sections.md"
+    },
+    "wpp.presentation.sections.slide_ids": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/sections.md"
+    },
+    "wpp.presentation.tags.add": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/tags.md"
+    },
+    "wpp.presentation.tags.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/tags.md"
+    },
+    "wpp.presentation.tags.tags": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/presentation/tags.md"
+    },
+    "wpp.shape.charts.axis": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-layout.md"
+    },
+    "wpp.shape.charts.chart_type": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-layout.md"
+    },
+    "wpp.shape.charts.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-data.md"
+    },
+    "wpp.shape.charts.data_labels": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-data.md"
+    },
+    "wpp.shape.charts.gridlines": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-layout.md"
+    },
+    "wpp.shape.charts.legend": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-layout.md"
+    },
+    "wpp.shape.charts.series_style": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/charts-data.md"
+    },
+    "wpp.shape.charts.title": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-layout.md"
+    },
+    "wpp.shape.charts.trendline": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/charts-layout.md"
+    },
+    "wpp.shape.items.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-core.md"
+    },
+    "wpp.shape.items.duplicate": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-core.md"
+    },
+    "wpp.shape.items.fill": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.geometry": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.group": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.group_children": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.item": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-core.md"
+    },
+    "wpp.shape.items.line": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-insert.md"
+    },
+    "wpp.shape.items.lines": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-insert.md"
+    },
+    "wpp.shape.items.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-core.md"
+    },
+    "wpp.shape.items.name": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.picture": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-insert.md"
+    },
+    "wpp.shape.items.reorder_in_group": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.shapes": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.tables": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-insert.md"
+    },
+    "wpp.shape.items.textboxes": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-insert.md"
+    },
+    "wpp.shape.items.ungroup": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.update_group_props": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-group.md"
+    },
+    "wpp.shape.items.z_order": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/items-core.md"
+    },
+    "wpp.shape.tables.cell_merge": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tables.cell_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tables.cell_unmerge": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tables.cells": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tables.column": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tables.dimensions": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tables.merged_ranges": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tables.row": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tables.md"
+    },
+    "wpp.shape.tags.add": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tags.md"
+    },
+    "wpp.shape.tags.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tags.md"
+    },
+    "wpp.shape.tags.tags": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/tags.md"
+    },
+    "wpp.shape.texts.append": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/texts.md"
+    },
+    "wpp.shape.texts.find_replace": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/texts.md"
+    },
+    "wpp.shape.texts.font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "描述提及可设字体，但live schema只列定位参数；默认按write保守处理，不扩展猜测字段。"
+      ],
+      "referencePath": "references/wpp/shape/texts.md"
+    },
+    "wpp.shape.texts.font_paragraph": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/texts.md"
+    },
+    "wpp.shape.texts.paragraph": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/shape/texts.md"
+    },
+    "wpp.shape.texts.text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/shape/texts.md"
+    },
+    "wpp.shape.webshapes.content": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [
+        "在WPS演示中插入活跃HTML内容，可能影响查看者；本服务只传参数、不在本站执行HTML或JavaScript。"
+      ],
+      "referencePath": "references/wpp/shape/webshapes.md"
+    },
+    "wpp.slide.animations.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "insert"
+        ],
+        "read": [],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wpp/slide/animations.md"
+    },
+    "wpp.slide.animations.effects": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/animations.md"
+    },
+    "wpp.slide.animations.order": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/animations.md"
+    },
+    "wpp.slide.animations.timeline": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/animations.md"
+    },
+    "wpp.slide.animations.timing": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/animations.md"
+    },
+    "wpp.slide.animations.trigger": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/animations.md"
+    },
+    "wpp.slide.animations.types": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/animations.md"
+    },
+    "wpp.slide.comments.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/comments.md"
+    },
+    "wpp.slide.comments.data": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "insert"
+        ],
+        "read": [],
+        "sensitive": [
+          "delete",
+          "insert"
+        ]
+      },
+      "referencePath": "references/wpp/slide/comments.md"
+    },
+    "wpp.slide.comments.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/comments.md"
+    },
+    "wpp.slide.comments.reply": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/comments.md"
+    },
+    "wpp.slide.comments.thread": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/comments.md"
+    },
+    "wpp.slide.items.background": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.batch_slides": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-structure.md"
+    },
+    "wpp.slide.items.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-structure.md"
+    },
+    "wpp.slide.items.datetime": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-structure.md"
+    },
+    "wpp.slide.items.duplicate": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-structure.md"
+    },
+    "wpp.slide.items.footer": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-structure.md"
+    },
+    "wpp.slide.items.layout": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-structure.md"
+    },
+    "wpp.slide.items.master": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.move": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-structure.md"
+    },
+    "wpp.slide.items.name": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.page_number": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.slide_id": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.items.transition": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/items-slide.md"
+    },
+    "wpp.slide.notes.append": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/notes.md"
+    },
+    "wpp.slide.notes.create": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/notes.md"
+    },
+    "wpp.slide.notes.notes": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/notes.md"
+    },
+    "wpp.slide.notes.set": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/notes.md"
+    },
+    "wpp.slide.tags.add": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/tags.md"
+    },
+    "wpp.slide.tags.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/tags.md"
+    },
+    "wpp.slide.tags.tags": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wpp/slide/tags.md"
+    },
+    "wps.bookmarks.content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/bookmarks.content.md"
+    },
+    "wps.bookmarks.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/bookmarks.count.md"
+    },
+    "wps.bookmarks.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/bookmarks.delete.md"
+    },
+    "wps.bookmarks.exists": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/bookmarks.exists.md"
+    },
+    "wps.bookmarks.goto": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/bookmarks.goto.md"
+    },
+    "wps.bookmarks.insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/bookmarks.insert.md"
+    },
+    "wps.bookmarks.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/bookmarks.list.md"
+    },
+    "wps.bookmarks.rename": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/bookmarks.rename.md"
+    },
+    "wps.breaks.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/breaks.data.md"
+    },
+    "wps.captions.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/captions.data.md"
+    },
+    "wps.captions.label": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/captions.label.md"
+    },
+    "wps.comments.add": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.add.md"
+    },
+    "wps.comments.author": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.author.md"
+    },
+    "wps.comments.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.count.md"
+    },
+    "wps.comments.data": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.data.md"
+    },
+    "wps.comments.delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.delete.md"
+    },
+    "wps.comments.delete_all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.delete_all.md"
+    },
+    "wps.comments.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.list.md"
+    },
+    "wps.comments.modify_text": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.modify_text.md"
+    },
+    "wps.comments.paragraph_insert": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.paragraph_insert.md"
+    },
+    "wps.comments.range_insert": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.range_insert.md"
+    },
+    "wps.comments.reply": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.reply.md"
+    },
+    "wps.comments.resolve": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.resolve.md"
+    },
+    "wps.comments.set_done": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "写入协作评论/回复或改变其状态，可能对协作者可见。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/comments.set_done.md"
+    },
+    "wps.content_controls.all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.all.md"
+    },
+    "wps.content_controls.checkbox": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.checkbox.md"
+    },
+    "wps.content_controls.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.count.md"
+    },
+    "wps.content_controls.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "query"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/content_controls.data.md"
+    },
+    "wps.content_controls.date_picker": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.date_picker.md"
+    },
+    "wps.content_controls.dropdown": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.dropdown.md"
+    },
+    "wps.content_controls.dropdown_add": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.dropdown_add.md"
+    },
+    "wps.content_controls.dropdown_remove": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.dropdown_remove.md"
+    },
+    "wps.content_controls.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.list.md"
+    },
+    "wps.content_controls.plain_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.plain_text.md"
+    },
+    "wps.content_controls.props": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.props.md"
+    },
+    "wps.content_controls.rich_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.rich_text.md"
+    },
+    "wps.content_controls.tag": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "query"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/content_controls.tag.md"
+    },
+    "wps.content_controls.title": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.title.md"
+    },
+    "wps.content_controls.value": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.value.md"
+    },
+    "wps.content_controls.value_by_tag": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/content_controls.value_by_tag.md"
+    },
+    "wps.export": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/export.md"
+    },
+    "wps.export_image": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/export_image.md"
+    },
+    "wps.fields.all": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/fields.all.md"
+    },
+    "wps.fields.by_paragraph": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/fields.by_paragraph.md"
+    },
+    "wps.fields.by_range": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/fields.by_range.md"
+    },
+    "wps.fields.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/fields.count.md"
+    },
+    "wps.fields.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/fields.data.md"
+    },
+    "wps.fields.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/fields.list.md"
+    },
+    "wps.fields.toggle_code": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/fields.toggle_code.md"
+    },
+    "wps.fields.unlink": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/fields.unlink.md"
+    },
+    "wps.footnote_endnotes.endnote_all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.endnote_all.md"
+    },
+    "wps.footnote_endnotes.endnote_by_paragraph": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.endnote_by_paragraph.md"
+    },
+    "wps.footnote_endnotes.endnote_by_range": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.endnote_by_range.md"
+    },
+    "wps.footnote_endnotes.endnote_count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.endnote_count.md"
+    },
+    "wps.footnote_endnotes.endnote_data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "query"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/footnote_endnotes.endnote_data.md"
+    },
+    "wps.footnote_endnotes.endnote_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.endnote_list.md"
+    },
+    "wps.footnote_endnotes.endnote_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.endnote_text.md"
+    },
+    "wps.footnote_endnotes.footnote_all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.footnote_all.md"
+    },
+    "wps.footnote_endnotes.footnote_by_paragraph": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.footnote_by_paragraph.md"
+    },
+    "wps.footnote_endnotes.footnote_by_range": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.footnote_by_range.md"
+    },
+    "wps.footnote_endnotes.footnote_count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.footnote_count.md"
+    },
+    "wps.footnote_endnotes.footnote_data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "query"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/footnote_endnotes.footnote_data.md"
+    },
+    "wps.footnote_endnotes.footnote_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "省略font_style才是读取；提供字体对象会写入，目录默认按write处理。"
+      ],
+      "referencePath": "references/wps/footnote_endnotes.footnote_font.md"
+    },
+    "wps.footnote_endnotes.footnote_list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.footnote_list.md"
+    },
+    "wps.footnote_endnotes.footnote_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/footnote_endnotes.footnote_text.md"
+    },
+    "wps.formulas.math": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "query"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/formulas.math.md"
+    },
+    "wps.header_footers.content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.content.md"
+    },
+    "wps.header_footers.different_first": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.different_first.md"
+    },
+    "wps.header_footers.different_odd_even": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.different_odd_even.md"
+    },
+    "wps.header_footers.footer_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/header_footers.footer_alignment.md"
+    },
+    "wps.header_footers.footer_content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/header_footers.footer_content.md"
+    },
+    "wps.header_footers.footer_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.footer_font.md"
+    },
+    "wps.header_footers.footer_link_previous": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.footer_link_previous.md"
+    },
+    "wps.header_footers.footer_page_number": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.footer_page_number.md"
+    },
+    "wps.header_footers.footer_page_number_custom": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/header_footers.footer_page_number_custom.md"
+    },
+    "wps.header_footers.footer_remove": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.footer_remove.md"
+    },
+    "wps.header_footers.header_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/header_footers.header_alignment.md"
+    },
+    "wps.header_footers.header_content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/header_footers.header_content.md"
+    },
+    "wps.header_footers.header_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.header_font.md"
+    },
+    "wps.header_footers.header_footer_full": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.header_footer_full.md"
+    },
+    "wps.header_footers.header_link_previous": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.header_link_previous.md"
+    },
+    "wps.header_footers.header_page_number": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.header_page_number.md"
+    },
+    "wps.header_footers.header_page_number_custom": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/header_footers.header_page_number_custom.md"
+    },
+    "wps.header_footers.header_remove": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.header_remove.md"
+    },
+    "wps.header_footers.page_number_style": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.page_number_style.md"
+    },
+    "wps.header_footers.shape_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/header_footers.shape_alignment.md"
+    },
+    "wps.headings.heading_delete": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/headings.heading_delete.md"
+    },
+    "wps.headings.heading_meta": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/headings.heading_meta.md"
+    },
+    "wps.headings.heading_table": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/headings.heading_table.md"
+    },
+    "wps.headings.heading_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/headings.heading_text.md"
+    },
+    "wps.headings.heading_text_batch": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/headings.heading_text_batch.md"
+    },
+    "wps.hyperlinks.address": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/hyperlinks.address.md"
+    },
+    "wps.hyperlinks.all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/hyperlinks.all.md"
+    },
+    "wps.hyperlinks.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/hyperlinks.count.md"
+    },
+    "wps.hyperlinks.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "delete"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/hyperlinks.data.md"
+    },
+    "wps.hyperlinks.insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/hyperlinks.insert.md"
+    },
+    "wps.hyperlinks.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/hyperlinks.list.md"
+    },
+    "wps.images.all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.all.md"
+    },
+    "wps.images.alternative_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/images.alternative_text.md"
+    },
+    "wps.images.border": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.border.md"
+    },
+    "wps.images.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.count.md"
+    },
+    "wps.images.crop": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.crop.md"
+    },
+    "wps.images.crop_to_shape": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.crop_to_shape.md"
+    },
+    "wps.images.data": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.data.md"
+    },
+    "wps.images.info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.info.md"
+    },
+    "wps.images.insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.insert.md"
+    },
+    "wps.images.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.list.md"
+    },
+    "wps.images.locate_paragraph": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.locate_paragraph.md"
+    },
+    "wps.images.lock_aspect_ratio": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.lock_aspect_ratio.md"
+    },
+    "wps.images.move_to_paragraph": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.move_to_paragraph.md"
+    },
+    "wps.images.resize": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.resize.md"
+    },
+    "wps.images.scale": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.scale.md"
+    },
+    "wps.images.title": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.title.md"
+    },
+    "wps.images.wrap": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/images.wrap.md"
+    },
+    "wps.indexes.entry": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/indexes.entry.md"
+    },
+    "wps.lists.apply_with_level": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.apply_with_level.md"
+    },
+    "wps.lists.blocks": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.blocks.md"
+    },
+    "wps.lists.custom_bullet": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.custom_bullet.md"
+    },
+    "wps.lists.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/lists.data.md"
+    },
+    "wps.lists.level_style": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.level_style.md"
+    },
+    "wps.lists.multilevel": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.multilevel.md"
+    },
+    "wps.lists.number_format": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.number_format.md"
+    },
+    "wps.lists.remove": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.remove.md"
+    },
+    "wps.lists.restart": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/lists.restart.md"
+    },
+    "wps.ole.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/ole.list.md"
+    },
+    "wps.ole.text_after": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/ole.text_after.md"
+    },
+    "wps.protection.disable": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/protection.disable.md"
+    },
+    "wps.protection.enable": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/protection.enable.md"
+    },
+    "wps.protection.type": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/protection.type.md"
+    },
+    "wps.query_export": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/query_export.md"
+    },
+    "wps.references.insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/references.insert.md"
+    },
+    "wps.revisions.accept": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/revisions.accept.md"
+    },
+    "wps.revisions.accept_all": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "update"
+        ]
+      },
+      "referencePath": "references/wps/revisions.accept_all.md"
+    },
+    "wps.revisions.accept_by_author": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "update"
+        ]
+      },
+      "referencePath": "references/wps/revisions.accept_by_author.md"
+    },
+    "wps.revisions.all": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/revisions.all.md"
+    },
+    "wps.revisions.by_author": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/revisions.by_author.md"
+    },
+    "wps.revisions.reject": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/revisions.reject.md"
+    },
+    "wps.revisions.reject_all": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "update"
+        ]
+      },
+      "referencePath": "references/wps/revisions.reject_all.md"
+    },
+    "wps.revisions.reject_by_author": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "update"
+        ]
+      },
+      "referencePath": "references/wps/revisions.reject_by_author.md"
+    },
+    "wps.revisions.status": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "update"
+        ]
+      },
+      "referencePath": "references/wps/revisions.status.md"
+    },
+    "wps.sections.background_color": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/sections.background_color.md"
+    },
+    "wps.sections.border": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.border.md"
+    },
+    "wps.sections.border_art": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.border_art.md"
+    },
+    "wps.sections.border_data": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.border_data.md"
+    },
+    "wps.sections.border_distance": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.border_distance.md"
+    },
+    "wps.sections.break": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.break.md"
+    },
+    "wps.sections.columns": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.columns.md"
+    },
+    "wps.sections.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.count.md"
+    },
+    "wps.sections.grid_layout": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.grid_layout.md"
+    },
+    "wps.sections.gutter": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.gutter.md"
+    },
+    "wps.sections.line_numbering": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.line_numbering.md"
+    },
+    "wps.sections.page_setup": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/sections.page_setup.md"
+    },
+    "wps.sections.section_full": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/sections.section_full.md"
+    },
+    "wps.shapes.align": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.align.md"
+    },
+    "wps.shapes.all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.all.md"
+    },
+    "wps.shapes.anchor": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.anchor.md"
+    },
+    "wps.shapes.basic": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.basic.md"
+    },
+    "wps.shapes.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.count.md"
+    },
+    "wps.shapes.data": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.data.md"
+    },
+    "wps.shapes.delete_by_type": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.delete_by_type.md"
+    },
+    "wps.shapes.distribute": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.distribute.md"
+    },
+    "wps.shapes.fill_color": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.fill_color.md"
+    },
+    "wps.shapes.find_by_text": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.find_by_text.md"
+    },
+    "wps.shapes.font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.font.md"
+    },
+    "wps.shapes.group": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.group.md"
+    },
+    "wps.shapes.info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.info.md"
+    },
+    "wps.shapes.line": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.line.md"
+    },
+    "wps.shapes.line_color": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.line_color.md"
+    },
+    "wps.shapes.line_dash": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.line_dash.md"
+    },
+    "wps.shapes.line_width": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.line_width.md"
+    },
+    "wps.shapes.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.list.md"
+    },
+    "wps.shapes.paragraph_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.paragraph_font.md"
+    },
+    "wps.shapes.picture": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.picture.md"
+    },
+    "wps.shapes.props": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.props.md"
+    },
+    "wps.shapes.subrange_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.subrange_font.md"
+    },
+    "wps.shapes.text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.text.md"
+    },
+    "wps.shapes.text_box": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.text_box.md"
+    },
+    "wps.shapes.text_box_auto_size": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.text_box_auto_size.md"
+    },
+    "wps.shapes.text_box_link": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.text_box_link.md"
+    },
+    "wps.shapes.text_box_margins": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.text_box_margins.md"
+    },
+    "wps.shapes.text_replace": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.text_replace.md"
+    },
+    "wps.shapes.ungroup": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/shapes.ungroup.md"
+    },
+    "wps.shapes.wrap_type": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.wrap_type.md"
+    },
+    "wps.shapes.z_order": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/shapes.z_order.md"
+    },
+    "wps.styles.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/styles.data.md"
+    },
+    "wps.styles.definition": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "update",
+          "delete"
+        ],
+        "read": [],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/styles.definition.md"
+    },
+    "wps.styles.list": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/styles.list.md"
+    },
+    "wps.tables.alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.alignment.md"
+    },
+    "wps.tables.all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.all.md"
+    },
+    "wps.tables.auto_fit": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.auto_fit.md"
+    },
+    "wps.tables.borders": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.borders.md"
+    },
+    "wps.tables.cell_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.cell_alignment.md"
+    },
+    "wps.tables.cell_background": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.cell_background.md"
+    },
+    "wps.tables.cell_border": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.cell_border.md"
+    },
+    "wps.tables.cell_content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "delete",
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/tables.cell_content.md"
+    },
+    "wps.tables.cell_content_append": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.cell_content_append.md"
+    },
+    "wps.tables.cell_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.cell_font.md"
+    },
+    "wps.tables.cell_margins": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.cell_margins.md"
+    },
+    "wps.tables.cell_merge": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.cell_merge.md"
+    },
+    "wps.tables.cell_split": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.cell_split.md"
+    },
+    "wps.tables.cell_split_to_cols": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.cell_split_to_cols.md"
+    },
+    "wps.tables.cell_split_to_rows": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.cell_split_to_rows.md"
+    },
+    "wps.tables.cell_vertical_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.cell_vertical_alignment.md"
+    },
+    "wps.tables.column": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.column.md"
+    },
+    "wps.tables.column_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.column_alignment.md"
+    },
+    "wps.tables.column_background": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.column_background.md"
+    },
+    "wps.tables.column_content": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.column_content.md"
+    },
+    "wps.tables.column_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.column_font.md"
+    },
+    "wps.tables.column_insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.column_insert.md"
+    },
+    "wps.tables.column_merge": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.column_merge.md"
+    },
+    "wps.tables.column_vertical_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.column_vertical_alignment.md"
+    },
+    "wps.tables.column_width": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.column_width.md"
+    },
+    "wps.tables.convert_from_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.convert_from_text.md"
+    },
+    "wps.tables.convert_to_text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.convert_to_text.md"
+    },
+    "wps.tables.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.count.md"
+    },
+    "wps.tables.create": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.create.md"
+    },
+    "wps.tables.data": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.data.md"
+    },
+    "wps.tables.dimensions": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.dimensions.md"
+    },
+    "wps.tables.range": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.range.md"
+    },
+    "wps.tables.repeat_header_row": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.repeat_header_row.md"
+    },
+    "wps.tables.row": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.row.md"
+    },
+    "wps.tables.row_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.row_alignment.md"
+    },
+    "wps.tables.row_background": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.row_background.md"
+    },
+    "wps.tables.row_break_across_pages": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.row_break_across_pages.md"
+    },
+    "wps.tables.row_content": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.row_content.md"
+    },
+    "wps.tables.row_content_batch": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.row_content_batch.md"
+    },
+    "wps.tables.row_font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.row_font.md"
+    },
+    "wps.tables.row_height": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.row_height.md"
+    },
+    "wps.tables.row_height_rule": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.row_height_rule.md"
+    },
+    "wps.tables.row_insert": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.row_insert.md"
+    },
+    "wps.tables.row_merge": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.row_merge.md"
+    },
+    "wps.tables.row_vertical_alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/tables.row_vertical_alignment.md"
+    },
+    "wps.tables.sort": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.sort.md"
+    },
+    "wps.tables.split": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.split.md"
+    },
+    "wps.tables.table_full": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tables.table_full.md"
+    },
+    "wps.texts.alignment": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.alignment.md"
+    },
+    "wps.texts.border": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "update"
+        ],
+        "read": [],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.border.md"
+    },
+    "wps.texts.builtin_properties": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.builtin_properties.md"
+    },
+    "wps.texts.char_border": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.char_border.md"
+    },
+    "wps.texts.char_case": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.char_case.md"
+    },
+    "wps.texts.char_spacing": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.char_spacing.md"
+    },
+    "wps.texts.clear_format": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.clear_format.md"
+    },
+    "wps.texts.content": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [
+        "按verb区分查询/插入/更新/删除；未知或未解析verb不能当只读。"
+      ],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "insert",
+          "update",
+          "delete"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/texts.content.md"
+    },
+    "wps.texts.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.count.md"
+    },
+    "wps.texts.effect": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.effect.md"
+    },
+    "wps.texts.emphasis_mark": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.emphasis_mark.md"
+    },
+    "wps.texts.enclosed_char": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.enclosed_char.md"
+    },
+    "wps.texts.font": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.font.md"
+    },
+    "wps.texts.font_batch": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.font_batch.md"
+    },
+    "wps.texts.font_color": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.font_color.md"
+    },
+    "wps.texts.font_gradient": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.font_gradient.md"
+    },
+    "wps.texts.format": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.format.md"
+    },
+    "wps.texts.format_batch": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.format_batch.md"
+    },
+    "wps.texts.format_copy": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.format_copy.md"
+    },
+    "wps.texts.heading": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "update"
+        ],
+        "read": [],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.heading.md"
+    },
+    "wps.texts.highlight": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.highlight.md"
+    },
+    "wps.texts.indent": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.indent.md"
+    },
+    "wps.texts.info": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.info.md"
+    },
+    "wps.texts.line_spacing": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.line_spacing.md"
+    },
+    "wps.texts.page_count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.page_count.md"
+    },
+    "wps.texts.page_number": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.page_number.md"
+    },
+    "wps.texts.range": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.range.md"
+    },
+    "wps.texts.replace": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [
+        "scope=paragraphs时使用完整原段落及src/dst；跳过多匹配默认更稳妥；空替换文本会删除内容。"
+      ],
+      "referencePath": "references/wps/texts.replace.md"
+    },
+    "wps.texts.search": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.search.md"
+    },
+    "wps.texts.shading": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "update"
+        ],
+        "read": [],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.shading.md"
+    },
+    "wps.texts.structure": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.structure.md"
+    },
+    "wps.texts.style": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.style.md"
+    },
+    "wps.texts.tab_stops": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "update"
+        ],
+        "read": [],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.tab_stops.md"
+    },
+    "wps.texts.tab_stops_clear": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "insert",
+          "update"
+        ],
+        "read": [],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.tab_stops_clear.md"
+    },
+    "wps.texts.theme_color": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.theme_color.md"
+    },
+    "wps.texts.two_lines_in_one": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.two_lines_in_one.md"
+    },
+    "wps.texts.underline_color": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "update"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": []
+      },
+      "referencePath": "references/wps/texts.underline_color.md"
+    },
+    "wps.texts.word_count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/texts.word_count.md"
+    },
+    "wps.tocs.all": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tocs.all.md"
+    },
+    "wps.tocs.count": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tocs.count.md"
+    },
+    "wps.tocs.data": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "live schema含verb动作选择；目录默认write，执行时按已解析的具体verb再次分类。",
+      "capabilityNotes": [],
+      "selector": {
+        "field": "verb",
+        "allowed": [
+          "query",
+          "insert",
+          "delete"
+        ],
+        "read": [
+          "query"
+        ],
+        "sensitive": [
+          "delete"
+        ]
+      },
+      "referencePath": "references/wps/tocs.data.md"
+    },
+    "wps.tocs.figures": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tocs.figures.md"
+    },
+    "wps.tocs.format": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tocs.format.md"
+    },
+    "wps.tocs.update": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tocs.update.md"
+    },
+    "wps.tocs.update_all": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/tocs.update_all.md"
+    },
+    "wps.watermarks.data": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "实际动作删除/清空/关闭/取消或开启分享，需明确目标与范围。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/watermarks.data.md"
+    },
+    "wps.watermarks.image": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/watermarks.image.md"
+    },
+    "wps.watermarks.query": {
+      "operation": "read",
+      "executionAllowed": true,
+      "basis": "按实际功能描述与无写动作分支的schema审阅为读取/查询。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/watermarks.query.md"
+    },
+    "wps.watermarks.text": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/watermarks.text.md"
+    },
+    "wps.watermarks.text_italic": {
+      "operation": "write",
+      "executionAllowed": true,
+      "basis": "默认按写入处理；未依据工具名含读词直接放行为只读。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/watermarks.text_italic.md"
+    },
+    "wps.xmls.insert": {
+      "operation": "sensitive",
+      "executionAllowed": true,
+      "basis": "人工审阅：涉及外部可见内容、权限、全文覆盖、费用或远程资源/活跃内容。",
+      "capabilityNotes": [],
+      "referencePath": "references/wps/xmls.insert.md"
+    }
+  }
+}

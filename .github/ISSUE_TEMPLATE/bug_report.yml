@@ -1,0 +1,32 @@
+name: 缺陷报告
+description: 报告连接器问题；不要提交真实令牌或私人文档
+title: '[Bug] '
+labels: ['bug']
+body:
+  - type: input
+    id: version
+    attributes:
+      label: 连接器版本
+      placeholder: v0.7.0
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 重现步骤
+      description: 请使用测试文件、脱敏内容和公开工具名
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期与实际结果
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私检查
+      options:
+        - label: 我已移除 WPS 令牌、授权码、私人文件内容和个人信息
+          required: true

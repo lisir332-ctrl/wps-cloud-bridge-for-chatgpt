@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792695178674,
+      "tag": "0000_sturdy_mephisto",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792696220654,
+      "tag": "0001_old_albert_cleary",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792698466475,
+      "tag": "0002_opposite_colleen_wing",
+      "breakpoints": true
+    }
+  ]
+}

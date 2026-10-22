@@ -1,0 +1,45 @@
+{
+  "snapshotVersion": 1,
+  "capturedAt": "2026-10-22T19:05:10.835795+00:00",
+  "sourceUrl": "https://mcp-center.wps.cn/skill_hub/mcp",
+  "protocolVersion": "2024-11-05",
+  "serverInfo": {
+    "name": "SkillHub MCP",
+    "version": "1.0.0"
+  },
+  "total": 619,
+  "pages": 1,
+  "authenticated": false,
+  "businessToolsCalled": 0,
+  "officialReferenceRepository": "https://github.com/kdocs-app/kdocs-skill",
+  "officialReferenceCommit": "1c5bf7574aed4e813ba2ab01321287b47c5e772b",
+  "officialReferenceCommitDate": "2026-10-10T03:02:46Z",
+  "officialSkillVersion": "2.7.1",
+  "snapshotSha256": "fdc1adf007525b787bf79f6b26b151956a14497cad32254b581c0a2909b23a55",
+  "categoryCounts": {
+    "aippt": 1,
+    "drive": 55,
+    "dbsheet": 69,
+    "form": 4,
+    "kwiki": 9,
+    "otl": 6,
+    "pdf": 11,
+    "sheet": 57,
+    "wpp": 121,
+    "wps": 286
+  },
+  "schemaKeywordCounts": {
+    "properties": 810,
+    "type": 4565,
+    "description": 3806,
+    "items": 141,
+    "required": 420,
+    "enum": 144
+  },
+  "limitations": [
+    "Public metadata presence does not establish entitlement for an individual account.",
+    "No real personal-account business operation was executed during this capture.",
+    "The snapshot is not the complete desktop WPS feature set.",
+    "Uniform upstream annotations are not used as safety policy."
+  ]
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="WPS Cloud Bridge community logo">
+  <rect width="512" height="512" rx="112" fill="#123B5D"/>
+  <path d="M102 347V172c0-19 15-34 34-34h147l91 91v118c0 19-15 34-34 34H136c-19 0-34-15-34-34Z" fill="#F6FBFF"/>
+  <path d="M283 138v68c0 13 10 23 23 23h68" fill="#D0E6F5"/>
+  <path d="M160 314c23-37 51-55 85-55s62 18 85 55" fill="none" stroke="#00A89A" stroke-width="25" stroke-linecap="round"/>
+  <circle cx="160" cy="315" r="15" fill="#00A89A"/>
+  <circle cx="330" cy="315" r="15" fill="#00A89A"/>
+</svg>
