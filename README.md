@@ -6,6 +6,13 @@ An open-source **ChatGPT connector for personal WPS cloud documents**. Ask for w
 
 **Cloud workflow, not local desktop automation:** no local WPS installation, always-on computer, desktop macro runner, or local callback port is required. The connector can use only capabilities exposed by the WPS cloud interface and granted to the account; it does not mirror every desktop WPS feature.
 
+**At a glance**
+
+- **Use it from ChatGPT:** request work from supported web, desktop, or mobile plugin surfaces; voice-triggered tool use depends on the ChatGPT mode available to your account. [Platform availability](https://learn.chatgpt.com/docs/plugins)
+- **Keep the computer off:** the hosted service handles bounded workflows without a local WPS process. Long or asynchronous jobs may need a later status check.
+- **Limit the connector surface:** it needs no local file or Shell access. WPS cloud access follows the connected account's actual authorization; publishing and sharing receive separate review.
+- **Check the result:** return a real WPS link, read back the output where possible, and protect writes from accidental duplicate execution.
+
 **Independent community project. Not made by or endorsed by WPS or OpenAI.** This repository is public source code; the hosted connector is currently private. A public ChatGPT Directory listing has **not** been approved or published. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) say unofficial third-party connectors are not eligible for approval without appropriate authorization.
 
 Created and maintained by **[Sergio](https://github.com/lisir332-ctrl)**, with development assistance from **Codex**. See [maintainers and credits](MAINTAINERS.md).
