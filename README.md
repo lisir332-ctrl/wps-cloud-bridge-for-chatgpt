@@ -13,7 +13,7 @@ An open-source **ChatGPT connector for personal WPS cloud documents**. Ask in Ch
 
 Cloud API limits still apply; this connector does not reproduce every desktop WPS feature. Publishing and sharing receive separate review.
 
-**Independent community project. Not made by or endorsed by WPS or OpenAI.** This repository is public source code; the hosted connector is currently private. A public ChatGPT Directory listing has **not** been approved or published. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) say unofficial third-party connectors are not eligible for approval without appropriate authorization.
+**Independent community project. Not made by or endorsed by WPS or OpenAI.** The [personal-install preview service](https://wps-cloud-bridge-public.team17843977-2024.chatgpt.site/) is publicly reachable and separate from the maintainer's private Site. Installation and WPS authorization under a second ChatGPT account remain unverified. A public ChatGPT Directory listing has **not** been approved or published. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) require proper authorization for third-party integrations.
 
 Public Directory progress is tracked in [issue #1](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues/1).
 

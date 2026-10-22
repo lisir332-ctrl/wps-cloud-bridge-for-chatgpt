@@ -13,7 +13,7 @@
 
 云接口的能力与额度仍有限制；连接器不复制桌面版 WPS 的全部功能。发布与分享另行审阅。
 
-**这是独立社区项目，并非 WPS 或 OpenAI 官方产品，也未获得其背书。** GitHub 仓库公开的是源码；当前托管的连接服务仍为私有站点，**尚未获批或发布到 ChatGPT 公共插件目录**。[OpenAI 插件规则](https://developers.openai.com/plugins/plugin-guidelines)明确限制未经适当授权的第三方连接器。
+**这是独立社区项目，并非 WPS 或 OpenAI 官方产品，也未获得其背书。** [个人安装预览服务](https://wps-cloud-bridge-public.team17843977-2024.chatgpt.site/)已公开访问，与维护者原有的私人站点分开；第二个 ChatGPT 账号的安装及 WPS 授权尚未实测。项目**尚未获批或发布到 ChatGPT 公共插件目录**。[OpenAI 插件规则](https://developers.openai.com/plugins/plugin-guidelines)要求第三方集成取得适当授权。
 
 公共插件目录的准备进度记录在 [Issue #1](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues/1)。
 

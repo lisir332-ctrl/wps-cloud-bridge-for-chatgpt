@@ -1,6 +1,6 @@
 # ChatGPT 插件目录：提交资料草稿
 
-这份文档供公开提交时填写，不是已经上架的证明。**没有公开 GitHub 仓库、经验证的发布身份、合规 OAuth 与可公开访问的 MCP 端点前，不生成或上传声称可用的插件 ZIP。**
+这份文档供将来公开提交时填写，不是已经上架的证明。仓库已有[个人安装预览 ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-preview.1)和独立的公开云端入口，但 ZIP 上传、第二账号授权及读写尚未实测；WPS 集成分发许可和公开审核材料仍待完成。不要把预览包称为已获批的商店版本。
 
 ## 建议展示内容
 
@@ -15,8 +15,8 @@
 | 默认提示 2 | Create a Word document about tea tasting and give me its WPS link. |
 | 默认提示 3 | Draft a university sleep survey in WPS and show me the questions. |
 | `repository` | `https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt` |
-| `websiteURL` | 公开可访问的产品介绍页面；待公开部署后填写 |
-| `supportURL` | 维护者支持页面或 GitHub Issues；待仓库创建后填写 |
+| `websiteURL` | `https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt`；正式提交前确认发布者与域名要求 |
+| `supportURL` | `https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues` |
 | `privacyPolicyURL` | 经发布者确认的正式隐私政策 URL；待确认 |
 | `termsOfServiceURL` | 经发布者确认的正式服务条款 URL；待确认 |
 | `developerName` | Sergio；提交前须与完成验证的开发者身份一致 |
