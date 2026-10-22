@@ -2,7 +2,7 @@ import { keyReady, seal, unseal } from "./wps-crypto.ts";
 import { WpsStore, type Connection } from "./wps-store.ts";
 import { exchangeWpsCode, WpsError, WpsMcpClient, type McpToolResult } from "./wps-upstream.ts";
 
-export const APP_VERSION = "0.8.0";
+export const APP_VERSION = "0.8.1";
 // This is the bridge's waiting window, not a claim about WPS token lifetime.
 export const AUTH_TTL = 10 * 60_000;
 export type RuntimeEnv = { DB?: D1Database; WPS_ENCRYPTION_KEY?: string; SITE_ORIGIN?: string };

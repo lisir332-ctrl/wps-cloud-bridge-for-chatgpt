@@ -2,7 +2,9 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-An open-source connector that lets people work with their **personal WPS cloud documents from ChatGPT**. After connecting a WPS account, users can find, read, create, and edit supported cloud files in conversation. The connector returns real WPS links and checks results after writes.
+An open-source **ChatGPT connector for personal WPS cloud documents**. Ask for work in a ChatGPT conversation; a hosted MCP service calls WPS's personal cloud interface on the connected user's behalf. Files stay in WPS cloud. The connector returns real WPS links and checks results after writes.
+
+**Cloud workflow, not local desktop automation:** no local WPS installation, always-on computer, desktop macro runner, or local callback port is required. The connector can use only capabilities exposed by the WPS cloud interface and granted to the account; it does not mirror every desktop WPS feature.
 
 **Independent community project. Not made by or endorsed by WPS or OpenAI.** This repository is public source code; the hosted connector is currently private. A public ChatGPT Directory listing has **not** been approved or published. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) say unofficial third-party connectors are not eligible for approval without appropriate authorization.
 
@@ -23,8 +25,8 @@ The catalog contains a snapshot of **619 tools** discovered from WPS's personal 
 ## How it works
 
 1. Sign in to the supported hosting environment and connect your own WPS account on its minimal authorization page.
-2. In ChatGPT, select the companion MCP connection and ask for an outcome, such as “Create a Word document introducing tea tasting” or “Find my recent WPS files.”
-3. The connector resolves the target and exact tool schema, performs the requested cloud operation, reads back what it can verify, and returns a usable WPS link.
+2. In ChatGPT, select the MCP connector and ask for an outcome, such as “Create a Word document introducing tea tasting” or “Find my recent WPS files.”
+3. The hosted connector resolves the target and exact tool schema, performs the requested WPS cloud operation, reads back what it can verify, and returns a usable WPS link in the conversation.
 
 The authorization page handles connection, status, and disconnect only. Work happens in the ChatGPT conversation. Forms remain drafts by default. Publishing, deletion, sharing, permission changes, and operations that may consume a paid entitlement receive separate review. Free and member capabilities are determined from WPS's actual response.
 

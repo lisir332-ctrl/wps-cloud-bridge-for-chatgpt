@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.1 — 2026-10-23
+
+- Clarified that this is a hosted ChatGPT-to-WPS cloud connector, with no local WPS installation or always-on computer required.
+- Added bilingual product positioning and credited Sergio's ownership and Codex's development assistance.
+
 ## 0.8.0 — 2026-10-23
 
 - Presented the project as **WPS Cloud Bridge for ChatGPT** while keeping its independent status clear.

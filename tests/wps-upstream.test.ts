@@ -50,8 +50,8 @@ test("uses fixed HTTPS endpoint, own identity, unique ids, per-instance session 
   for (const call of first.calls) {
     assert.equal(call.url, "https://mcp-center.wps.cn/skill_hub/mcp");
     assert.equal(call.headers.get("authorization"), `Bearer ${TOKEN}`);
-    assert.equal(call.headers.get("x-request-source"), "wps-cloud-bridge/0.8.0");
-    assert.equal(call.headers.get("user-agent"), "wps-cloud-bridge/0.8.0");
+    assert.equal(call.headers.get("x-request-source"), "wps-cloud-bridge/0.8.1");
+    assert.equal(call.headers.get("user-agent"), "wps-cloud-bridge/0.8.1");
     assert.equal(call.headers.get("x-skill-version"), "1.0.0");
     assert.equal(call.init.redirect, "manual");
     assert.equal(call.init.credentials, "omit");
