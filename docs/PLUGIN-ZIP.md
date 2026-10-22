@@ -6,7 +6,7 @@
 
 **Can I upload the GitHub Release ZIP to ChatGPT Plugins? No.** The v0.8.1 ZIP is a source archive for reading and self-hosting. It has no root `plugin.json` or `mcp.json`, so it is not an installable plugin package. Unzipping the source also does not deploy the hosted MCP server or configure user authentication.
 
-**There is now a separate plugin-package template:** `plugin-package/` contains root `plugin.json`, `mcp.json`, a square icon, and an onboarding skill. Both manifests validate against the Agent Plugins 1.0 schemas. Its MCP URL is deliberately `https://replace-me.example/mcp`, so the public template ZIP cannot connect unchanged. To adapt it, deploy a WPS-authorized HTTPS MCP service with OAuth protected-resource metadata, replace the URL, zip the **contents** of `plugin-package/` so `plugin.json` is at the ZIP root, then use ChatGPT's **With MCP** upload path. A ZIP never hosts the server itself.
+**There is now a separate [plugin-package template ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-template.1):** `plugin-package/` contains root `plugin.json`, `mcp.json`, a square icon, and an onboarding skill. Both manifests validate against the Agent Plugins 1.0 schemas. Its MCP URL is deliberately `https://replace-me.example/mcp`, so the public template ZIP cannot connect unchanged. To adapt it, deploy a WPS-authorized HTTPS MCP service with OAuth protected-resource metadata, replace the URL, zip the **contents** of `plugin-package/` so `plugin.json` is at the ZIP root, then use ChatGPT's **With MCP** upload path. A ZIP never hosts the server itself.
 
 **How the current private connector is used:** the Site owner publishes the hosted Site, then installs its companion plugin under **Plugins → Personal → Created by you** and connects a personal WPS account on the Site's authorization page. That flow does not require uploading the source ZIP. Other users cannot install the current private Site merely by downloading the repository.
 
@@ -23,7 +23,7 @@ The public package is **not ready yet**: this connector needs an authorized WPS 
 
 **能把 GitHub Release 的 ZIP 直接上传到 ChatGPT 插件页面吗？目前不能。** v0.8.1 的 ZIP 是供阅读或自行托管的源码包，不含根目录 `plugin.json` 与 `mcp.json`，并非可安装插件包。解压源码也不会自动部署 MCP 服务或配置用户认证。
 
-**另有插件包模板：**`plugin-package/` 包含根目录 `plugin.json`、`mcp.json`、方形图标和入门技能，两份清单已通过 Agent Plugins 1.0 Schema 校验。公开模板故意使用 `https://replace-me.example/mcp` 占位地址，原样上传无法连接。要使用它，先部署获得 WPS 公开集成授权的 HTTPS MCP 服务并提供 OAuth 资源元数据，替换地址，再把 `plugin-package/` 的**内容**打成 ZIP（让 `plugin.json` 位于 ZIP 根目录），从 ChatGPT 的 **With MCP** 路径上传。ZIP 本身不会运行服务。
+**另有[插件包模板 ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-template.1)：**`plugin-package/` 包含根目录 `plugin.json`、`mcp.json`、方形图标和入门技能，两份清单已通过 Agent Plugins 1.0 Schema 校验。公开模板故意使用 `https://replace-me.example/mcp` 占位地址，原样上传无法连接。要使用它，先部署获得 WPS 公开集成授权的 HTTPS MCP 服务并提供 OAuth 资源元数据，替换地址，再把 `plugin-package/` 的**内容**打成 ZIP（让 `plugin.json` 位于 ZIP 根目录），从 ChatGPT 的 **With MCP** 路径上传。ZIP 本身不会运行服务。
 
 **当前私有版的正确用法：**站点所有者先发布 Sites 托管站点，再到 **Plugins → Personal → Created by you** 安装其配套插件，并在站点授权页连接自己的 WPS 账号。这条路径无需上传源码 ZIP。其他人仅下载仓库，无法直接安装当前私有站点。
 

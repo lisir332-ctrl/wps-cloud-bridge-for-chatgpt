@@ -39,7 +39,7 @@ The catalog contains a snapshot of **619 tools** discovered from WPS's personal 
 
 The authorization page handles connection, status, and disconnect only. Work happens in the ChatGPT conversation. Forms remain drafts by default. Publishing, deletion, sharing, permission changes, and operations that may consume a paid entitlement receive separate review. Free and member capabilities are determined from WPS's actual response.
 
-**ZIP installation:** the v0.8.1 Release ZIP is source code. A separate, schema-validated [plugin-package template](plugin-package/) is available, but its placeholder MCP URL must be replaced with an authorized hosted service before it can connect. The current private connector is installed through its Sites-generated personal plugin. See [plugin ZIP vs. source ZIP](docs/PLUGIN-ZIP.md).
+**ZIP installation:** the v0.8.1 Release ZIP is source code. A separate, schema-validated [plugin-package template ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-template.1) is available, but its placeholder MCP URL must be replaced with an authorized hosted service before it can connect. The current private connector is installed through its Sites-generated personal plugin. See [plugin ZIP vs. source ZIP](docs/PLUGIN-ZIP.md).
 
 Our distribution goal is simple: install from the public ChatGPT Directory or a configured GitHub plugin ZIP, connect your own WPS account, and use the connector in ChatGPT. [Track the remaining release work](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues/1).
 
