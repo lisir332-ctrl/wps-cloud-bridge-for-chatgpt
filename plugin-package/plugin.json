@@ -1,0 +1,36 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "wps-cloud-bridge",
+  "version": "0.9.0-template.1",
+  "description": "Template package for a hosted ChatGPT connector to WPS cloud documents. Configure an authorized MCP endpoint before use.",
+  "author": {
+    "name": "Sergio",
+    "url": "https://github.com/lisir332-ctrl"
+  },
+  "homepage": "https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt",
+  "repository": "https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt",
+  "license": "MIT",
+  "keywords": ["wps", "cloud-documents", "chatgpt", "mcp"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "WPS Cloud Bridge",
+        "shortDescription": "WPS cloud files in ChatGPT",
+        "longDescription": "Find, read, create, and edit supported personal WPS cloud documents from a ChatGPT conversation. The hosted service returns WPS links and checks results after writes. This independent package is a template and requires an authorized MCP endpoint; it is not a public Directory release.",
+        "developerName": "Sergio",
+        "category": "Productivity",
+        "capabilities": ["Find WPS cloud files", "Read WPS documents", "Create and edit supported files"],
+        "websiteURL": "https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt",
+        "supportURL": "https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues",
+        "defaultPrompt": [
+          "Find my recent WPS cloud documents.",
+          "Create a Word document about tea tasting and return its WPS link."
+        ],
+        "brandColor": "#123B5D",
+        "composerIcon": "./assets/bridge.svg",
+        "logo": "./assets/bridge.svg"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md"
+    }
+  }
+}
