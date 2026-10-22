@@ -15,6 +15,8 @@
 
 **这是独立社区项目，并非 WPS 或 OpenAI 官方产品，也未获得其背书。** GitHub 仓库公开的是源码；当前托管的连接服务仍为私有站点，**尚未获批或发布到 ChatGPT 公共插件目录**。[OpenAI 插件规则](https://developers.openai.com/plugins/plugin-guidelines)明确限制未经适当授权的第三方连接器。
 
+公共插件目录的准备进度记录在 [Issue #1](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues/1)。
+
 项目由 **[Sergio](https://github.com/lisir332-ctrl)** 发起并维护，借助 **Codex** 进行开发。详见[维护者与致谢](MAINTAINERS.md)。
 
 ## 已覆盖的云端能力

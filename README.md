@@ -15,6 +15,8 @@ Cloud API limits still apply; this connector does not reproduce every desktop WP
 
 **Independent community project. Not made by or endorsed by WPS or OpenAI.** This repository is public source code; the hosted connector is currently private. A public ChatGPT Directory listing has **not** been approved or published. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) say unofficial third-party connectors are not eligible for approval without appropriate authorization.
 
+Public Directory progress is tracked in [issue #1](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues/1).
+
 Created and maintained by **[Sergio](https://github.com/lisir332-ctrl)**, with development assistance from **Codex**. See [maintainers and credits](MAINTAINERS.md).
 
 ## What it covers
