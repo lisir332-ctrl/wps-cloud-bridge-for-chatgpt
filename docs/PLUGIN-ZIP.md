@@ -1,44 +1,28 @@
 # Plugin ZIP vs. source ZIP / 插件 ZIP 与源码 ZIP
 
-**Target user experience / 目标体验：** install from the ChatGPT Plugin Directory **or** upload a real plugin ZIP from GitHub → connect one's own WPS account → use WPS cloud tools in ChatGPT. 两条入口最终都应做到“安装 → 自己授权 WPS → 在 ChatGPT 中使用”。
-
 ## English
 
-**Can I upload the GitHub Release ZIP to ChatGPT Plugins? No.** The v0.8.1 ZIP is a source archive for reading and self-hosting. It has no root `plugin.json` or `mcp.json`, so it is not an installable plugin package. Unzipping the source also does not deploy the hosted MCP server or configure user authentication.
+The [v0.9.0-preview.1 plugin ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-preview.1) contains `plugin.json` and `mcp.json` at its root and points to a [separate public cloud endpoint](https://wps-cloud-bridge-public.team17843977-2024.chatgpt.site/). The original owner's private Site, database, and WPS connection are separate. The [v0.8.1 source ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.8.1) is source code and cannot be uploaded as a plugin.
 
-**There is now a separate [plugin-package template ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-template.1):** `plugin-package/` contains root `plugin.json`, `mcp.json`, a square icon, and an onboarding skill. Both manifests validate against the Agent Plugins 1.0 schemas. Its MCP URL is deliberately `https://replace-me.example/mcp`, so the public template ZIP cannot connect unchanged. To adapt it, deploy a WPS-authorized HTTPS MCP service with OAuth protected-resource metadata, replace the URL, zip the **contents** of `plugin-package/` so `plugin.json` is at the ZIP root, then use ChatGPT's **With MCP** upload path. A ZIP never hosts the server itself.
+**Preview installation:** Download `WPS-Cloud-Bridge-plugin-preview-v0.9.0.zip` from the preview Release. In ChatGPT Plugins, use the **With MCP** ZIP upload path. If accepted, connect to the hosted service, sign in with your own ChatGPT account, and authorize your own WPS account on its page. The server selects encrypted WPS credentials by the identity supplied by ChatGPT and rejects missing identity. The ZIP carries neither credentials nor a copy of the owner's WPS account.
 
-**How the current private connector is used:** the Site owner publishes the hosted Site, then installs its companion plugin under **Plugins → Personal → Created by you** and connects a personal WPS account on the Site's authorization page. That flow does not require uploading the source ZIP. Other users cannot install the current private Site merely by downloading the repository.
+**Verification status:** the new cloud Site is deployed, its MCP OAuth protected-resource metadata responds, and unauthenticated requests are refused. A second user's end-to-end connection, the actual ChatGPT ZIP upload, and WPS read/write under that second account have **not yet been verified**. Treat the ZIP as an experimental personal-install preview, not as guaranteed one-click installation. Report upload or authorization errors in [GitHub Issues](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues).
 
-**When a plugin ZIP becomes appropriate:** OpenAI's public upload flow accepts a package with a valid manifest, MCP configuration, branding assets, and a real hosted HTTPS MCP endpoint. Uploading the ZIP registers metadata; it does not host the server. The endpoint must pass authentication and domain verification, tool scans, and review. A protected server must not be declared as unauthenticated.
-
-The public package is **not ready yet**: this connector needs an authorized WPS distribution path, a public reviewable authentication and demo-account flow, and a public tool surface with individually described operations. The current 619-tool catalog plus generic executor is useful inside the private connector but does not meet OpenAI's public review rule against generic tool discovery followed by a generic executor. Do not upload a placeholder ZIP or claim public Directory availability.
-
-| Distribution path | What remains before anyone can install and authorize |
-| --- | --- |
-| ChatGPT public Directory | WPS permission for public integration; public multi-user MCP and OAuth; reviewable tools, policies, demo, and approval |
-| GitHub plugin ZIP | The same public multi-user MCP and WPS permission; replace the template URL, validate auth, then distribute a configured ZIP |
+**Public Plugin Directory:** this package has not been submitted or approved. OpenAI's public guidelines require authorization for third-party service integrations and disallow generic discovery/schema-fetching followed by a generic executor. The current 619-tool catalog uses such an executor, so the public tool surface must be redesigned. WPS distribution rights, developer verification, policy pages, review account, and successful review are also open. A ZIP only registers configuration; the cloud server performs document operations.
 
 ## 简体中文
 
-**能把 GitHub Release 的 ZIP 直接上传到 ChatGPT 插件页面吗？目前不能。** v0.8.1 的 ZIP 是供阅读或自行托管的源码包，不含根目录 `plugin.json` 与 `mcp.json`，并非可安装插件包。解压源码也不会自动部署 MCP 服务或配置用户认证。
+[v0.9.0-preview.1 插件 ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-preview.1) 的根目录包含 `plugin.json` 和 `mcp.json`，指向[独立的公开云端入口](https://wps-cloud-bridge-public.team17843977-2024.chatgpt.site/)。原站点的私人数据库、加密密钥和 WPS 授权均未迁入。[v0.8.1 源码 ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.8.1) 仅用于阅读或自行托管，不能当插件包上传。
 
-**另有[插件包模板 ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-template.1)：**`plugin-package/` 包含根目录 `plugin.json`、`mcp.json`、方形图标和入门技能，两份清单已通过 Agent Plugins 1.0 Schema 校验。公开模板故意使用 `https://replace-me.example/mcp` 占位地址，原样上传无法连接。要使用它，先部署获得 WPS 公开集成授权的 HTTPS MCP 服务并提供 OAuth 资源元数据，替换地址，再把 `plugin-package/` 的**内容**打成 ZIP（让 `plugin.json` 位于 ZIP 根目录），从 ChatGPT 的 **With MCP** 路径上传。ZIP 本身不会运行服务。
+**预览安装：**从预览 Release 下载 `WPS-Cloud-Bridge-plugin-preview-v0.9.0.zip`，在 ChatGPT Plugins 中选择 **With MCP** 上传。若平台接受，再用自己的 ChatGPT 账户连接云端服务，并在授权页授权自己的 WPS 账户。服务按 ChatGPT 提供的用户 ID 读取分别加密保存的 WPS 凭据；没有身份的请求会被拒绝。ZIP 不含任何人的 WPS 令牌。
 
-**当前私有版的正确用法：**站点所有者先发布 Sites 托管站点，再到 **Plugins → Personal → Created by you** 安装其配套插件，并在站点授权页连接自己的 WPS 账号。这条路径无需上传源码 ZIP。其他人仅下载仓库，无法直接安装当前私有站点。
+**当前验证范围：**新站点已部署，MCP 的 OAuth 资源元数据可访问，未登录请求会被拒绝。**第二个 ChatGPT 账号的完整连接、ZIP 的实际上传、以及该账号的 WPS 读写尚未完成实测。**因此这是个人安装预览包，不承诺“下载即成功”。遇到上传或授权错误请在 [GitHub Issues](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues) 反馈。
 
-**未来什么时候可以上传插件 ZIP：**需要有效插件清单、MCP 配置、图标、真实可公开连接的 HTTPS MCP 服务，并完成认证、域名验证、工具扫描与审核。ZIP 只登记插件资料，不负责运行服务；受保护的服务不能冒充“无需认证”。
-
-公共插件包目前**尚未就绪**：还需取得 WPS 对公开分发的授权依据、可供审核的公开认证与测试账号，并把目前的通用目录/执行入口改成逐项明确描述的公开工具。不要上传占位 ZIP 或声称已上架。
-
-| 发布入口 | 所有人都能安装并自行授权前还缺什么 |
-| --- | --- |
-| ChatGPT 公共商店 | WPS 公开集成许可、多用户云端 MCP 与 OAuth、可审核的工具及政策材料、审核通过 |
-| GitHub 插件 ZIP | 同样需要多用户云端 MCP 与 WPS 许可；替换模板地址、验证认证后才能发布已配置的 ZIP |
+**公开插件商店：**尚未提交或获批。OpenAI 的公开规则要求第三方服务集成取得授权，并禁止通过通用目录/Schema 查询加通用执行器代替逐项描述的工具。当前 619 项能力目录仍使用通用执行器，需要调整公开工具接口；WPS 分发许可、开发者验证、政策页、审核账号与审核通过也尚待完成。ZIP 只登记连接配置，实际操作由云端服务完成。
 
 ## Official references / 官方依据
 
 - [Upload and submit a plugin](https://developers.openai.com/plugins/deploy/submission)
 - [Plugin package format](https://developers.openai.com/plugins/build/plugins)
-- [Plugin guidelines: third-party integrations and tool exposure](https://developers.openai.com/plugins/plugin-guidelines)
+- [Plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines)
 - [Sites-hosted personal plugin flow](https://learn.chatgpt.com/docs/extend/mcp)

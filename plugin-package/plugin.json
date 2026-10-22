@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "wps-cloud-bridge",
-  "version": "0.9.0-template.1",
-  "description": "Template package for a hosted ChatGPT connector to WPS cloud documents. Configure an authorized MCP endpoint before use.",
+  "version": "0.9.0-preview.1",
+  "description": "Preview package for the hosted ChatGPT connector to WPS cloud documents. Each ChatGPT user must authorize their own WPS account.",
   "author": {
     "name": "Sergio",
     "url": "https://github.com/lisir332-ctrl"
@@ -16,7 +16,7 @@
       "interface": {
         "displayName": "WPS Cloud Bridge",
         "shortDescription": "WPS cloud files in ChatGPT",
-        "longDescription": "Find, read, create, and edit supported personal WPS cloud documents from a ChatGPT conversation. The hosted service returns WPS links and checks results after writes. This independent package is a template and requires an authorized MCP endpoint; it is not a public Directory release.",
+        "longDescription": "Find, read, create, and edit supported personal WPS cloud documents from a ChatGPT conversation. Each user connects their own WPS account; credentials are stored separately by ChatGPT user ID. This is a preview package, not a public Directory release.",
         "developerName": "Sergio",
         "category": "Productivity",
         "capabilities": ["Find WPS cloud files", "Read WPS documents", "Create and edit supported files"],

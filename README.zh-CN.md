@@ -39,7 +39,7 @@
 
 授权页只负责连接、状态与断开；文档操作在 ChatGPT 对话中完成。问卷默认先保存为草稿。发布、删除、分享、权限修改及可能消耗会员权益的操作另行审阅。免费版与会员版能力以 WPS 的实际业务返回为准。
 
-**关于“上传 ZIP 安装插件”：**v0.8.1 Release 下载的是源码包。仓库另提供经 Schema 校验的[插件包模板 ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-template.1)，但其 MCP 地址是占位符，必须换成获得授权的托管服务后才能连接。当前私有版通过 Sites 生成的个人插件安装。详见[插件 ZIP 与源码 ZIP](docs/PLUGIN-ZIP.md)。
+**关于“上传 ZIP 安装插件”：**v0.8.1 Release 下载的是源码包。仓库另提供[已配置公开云端入口的预览插件 ZIP](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/releases/tag/v0.9.0-preview.1)，使用独立数据库；每位用户需登录 ChatGPT 并授权自己的 WPS 账户。ZIP 实际上传和第二账号的 WPS 连接尚未完成实测，这不是已上架的公开商店版本。详见[插件 ZIP 与源码 ZIP](docs/PLUGIN-ZIP.md)。
 
 目标体验是：从 ChatGPT 公共商店安装，或上传 GitHub 上已配置的插件 ZIP → 连接自己的 WPS 账号 → 在 ChatGPT 中直接使用。[查看待完成事项](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/issues/1)。
 

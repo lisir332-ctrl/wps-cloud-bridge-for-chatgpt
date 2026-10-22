@@ -1,7 +1,9 @@
 # Personal preview plugin package
 
-This folder contains a **portable Agent Plugins package template**, separate from the application source archive. Its root files are `plugin.json` and `mcp.json`. The URL in `mcp.json` is the reserved placeholder `replace-me.example` so the public repository does not expose the owner's private Site address.
+This is a configured **preview** package for the independent, hosted WPS Cloud Bridge. Its `mcp.json` points to the new public Site, which has its own empty database and encryption key. The original owner's private Site and WPS connection are not included.
 
-Before using a package copy, replace the `url` with an authorized hosted HTTPS MCP endpoint that returns a `WWW-Authenticate` challenge and publishes OAuth protected-resource metadata. The portable schema currently accepts `type` and `url` for a remote server; authentication must be discovered from the endpoint or configured through a host-specific validated extension during submission. Never declare a protected server as no-auth. The public template ZIP cannot connect as-is. The current private Site permits only its allowed account; packaging cannot grant other people access to that Site or their WPS files. A public Directory submission also needs an authorized WPS distribution path, a reviewable public tool surface, and the remaining review materials.
+To try it, upload the ZIP whose root contains `plugin.json` and `mcp.json` using ChatGPT Plugins' **With MCP** path. If ChatGPT accepts the package and connects to the server, sign in with your own ChatGPT account, open the authorization page, and authorize your own WPS account. Never paste WPS credentials into chat. The server uses the ChatGPT-provided user ID to select encrypted credentials and rejects missing identity.
 
-Do not add WPS tokens, GitHub credentials, reviewer passwords, or fixed Authorization headers to this package. [Current ZIP status and installation paths](../docs/PLUGIN-ZIP.md).
+This path has **not** been validated with a second ChatGPT account or completed ZIP upload. The package is not a public Plugin Directory listing. WPS distribution rights and OpenAI public review requirements remain open. A ZIP registers plugin configuration; the cloud Site runs the operations.
+
+See [installation status and limitations](../docs/PLUGIN-ZIP.md).
