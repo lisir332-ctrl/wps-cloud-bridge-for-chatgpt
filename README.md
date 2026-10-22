@@ -37,6 +37,8 @@ The catalog contains a snapshot of **619 tools** discovered from WPS's personal 
 
 The authorization page handles connection, status, and disconnect only. Work happens in the ChatGPT conversation. Forms remain drafts by default. Publishing, deletion, sharing, permission changes, and operations that may consume a paid entitlement receive separate review. Free and member capabilities are determined from WPS's actual response.
 
+**ZIP installation:** the downloadable GitHub Release ZIP is source code, not a ChatGPT plugin upload package. The current private connector is installed through its Sites-generated personal plugin. See [plugin ZIP vs. source ZIP](docs/PLUGIN-ZIP.md) before using ChatGPT's Upload ZIP option.
+
 ## Security and hosting
 
 The current deployment relies on a **trusted Sites-injected ChatGPT identity**, a D1 database, and a server-side encryption key. `POST /mcp` exposes tool discovery and calls. User identity is not accepted from the request body or a client-controlled header. WPS credentials are encrypted and isolated per user; the execution deduplication ledger does not store document bodies or tokens.
