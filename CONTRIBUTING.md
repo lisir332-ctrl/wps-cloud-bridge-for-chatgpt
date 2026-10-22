@@ -1,11 +1,11 @@
-# 参与贡献
+# Contributing
 
-欢迎修正文档、补充经 WPS 官方接口验证的操作经验或改进连接器。
+We welcome documentation fixes, carefully verified WPS cloud workflows, and connector improvements.
 
-1. 先搜索已有问题；报告时说明文件类型、调用的工具名、预期与实际结果。不要附上 WPS 令牌、授权码、私人文档正文、公开分享凭据或个人信息。
-2. 修改代码前阅读 `docs/PRODUCT-GUIDE.md`、`docs/USAGE.md` 与 `docs/PROTOCOL.md`。新增上游能力必须保留官方参考、原始 schema、风险分类及账号验收状态，不能仅凭网页按钮推断可调用。
-3. 提交改动时解释影响范围、认证与数据隔离风险、失败后的状态以及链接来源。新建与编辑操作须遵守请求编号去重和写后读回；发布、删除、分享和付费操作须保持独立审阅。
-4. 运行 `node tests/run.mjs`、`pnpm exec tsc --noEmit`、`pnpm build`。若无法在真实 WPS 账号验收，请明确说明模拟结果与未验证范围。
-5. 提交 Pull Request；维护者审核后决定是否合并。不要把真实账号凭据或数据库复制到公开仓库或 CI。
+1. Search existing issues first. When reporting a bug, include the file type, tool name, expected behavior, and actual result. Never include WPS tokens, authorization codes, private document content, share credentials, or personal data.
+2. Read `docs/PRODUCT-GUIDE.md`, `docs/USAGE.md`, and `docs/PROTOCOL.md` before changing an upstream integration. A new capability needs an official reference, its actual input schema, a risk classification, and an honest live-account validation status. A website button alone is not evidence that an API exists.
+3. Explain the change's scope, identity and data-isolation risks, failure states, and link source. Keep request-ID deduplication and post-write readback. Publishing, deletion, sharing, and paid actions must remain separately reviewed.
+4. Run `node tests/run.mjs`, `pnpm exec tsc --noEmit`, and `pnpm build`. If you cannot validate with a real WPS account, say so and distinguish simulated tests from live results.
+5. Open a pull request for maintainer review. Do not upload account credentials or database exports to the repository or CI.
 
-安全漏洞请按 [SECURITY.md](SECURITY.md) 私下报告，不要先公开利用细节。
+Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).

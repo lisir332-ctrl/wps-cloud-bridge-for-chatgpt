@@ -23,4 +23,6 @@
 - 清晰、可访问的支持、隐私和服务条款 URL；准确的图标、说明、5 个正例及 3 个反例测试用例。
 - 审核通过后由发布者在提交门户手动发布；GitHub 仓库链接可以放在 `repository` 字段和产品网站，但星标数量与目录展示不由连接器控制。
 
+OpenAI 当前插件指南还明确不批准以**未经授权的第三方服务连接器**为主要功能的插件。本项目要进入公共目录，必须先取得 WPS 对此集成和分发的认可或其他可验证的授权依据；不能仅因个人账号授权成功就宣称得到 WPS 对公共插件的批准。
+
 参阅 [OpenAI 插件提交说明](https://developers.openai.com/plugins/deploy/submission)、[远程 MCP 审核要求](https://developers.openai.com/plugins/deploy/app-review)、[认证规范](https://developers.openai.com/plugins/build/auth)。本仓库未完成这些外部账号与公开认证步骤时，不应声称已经在 ChatGPT 目录上架。

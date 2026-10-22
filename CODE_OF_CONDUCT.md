@@ -1,5 +1,5 @@
-# 社区行为准则
+# Code of conduct
 
-本项目欢迎不同背景的使用者与贡献者。请保持尊重，针对事实和代码讨论；不要人身攻击、骚扰、歧视、公开他人的私人资料或在问题区发布账号凭据。
+People from all backgrounds are welcome. Be respectful and discuss facts and code. Harassment, discrimination, personal attacks, doxxing, and posting credentials are not acceptable.
 
-维护者可以对违反准则的评论、Issue 和 Pull Request 采取隐藏、关闭或限制参与等措施。遇到安全漏洞请按 `SECURITY.md` 私密报告；其他行为问题可通过仓库维护者的公开联系方式联系。维护者会在保护当事人隐私的前提下处理。
+Maintainers may hide or close comments, issues, and pull requests that violate these rules, or limit participation when needed. Report security issues through [SECURITY.md](SECURITY.md). For other conduct concerns, contact the maintainer through the repository's published channels. Reports will be handled with care for the people involved.

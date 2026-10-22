@@ -6,7 +6,7 @@
 
 const MCP_URL = "https://mcp-center.wps.cn/skill_hub/mcp";
 const EXCHANGE_URL = "https://api.wps.cn/office/v5/ai/skill_hub/wps_auth/exchange";
-const CLIENT = "wps-cloud-bridge/0.7.0";
+const CLIENT = "wps-cloud-bridge/0.8.0";
 const REQUEST_TIMEOUT_MS = 25_000;
 const MAX_RESPONSE_BYTES = 4 * 1024 * 1024;
 const MAX_TOOL_PAGES = 100;
@@ -408,7 +408,7 @@ export class WpsMcpClient {
       this.initialization = (async () => {
         const result = await this.rpc("initialize", {
           protocolVersion: "2024-11-05", capabilities: {},
-          clientInfo: { name: "wps-cloud-bridge", version: "0.7.0" },
+          clientInfo: { name: "wps-cloud-bridge", version: "0.8.0" },
         });
         if (!record(result) || typeof result.protocolVersion !== "string" ||
             !/^\d{4}-\d{2}-\d{2}$/.test(result.protocolVersion)) throw invalidResponse();

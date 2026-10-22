@@ -1,18 +1,24 @@
-# 更新记录
+# Changelog
+
+## 0.8.0 — 2026-10-23
+
+- Presented the project as **WPS Cloud Bridge for ChatGPT** while keeping its independent status clear.
+- Published the GitHub repository and updated its links and English community materials.
+- Documented the third-party authorization requirement that currently blocks public ChatGPT Directory approval.
 
 ## 0.7.0 — 2026-10-22
 
-- 整理 14 个 WPS 产品入口的云端能力边界与 ChatGPT 操作指引。
-- 将真实 WPS 文档链接、独立问卷草稿管理链接与发布后的填写链接纳入结果回执。
-- 补充开源许可、贡献与安全文档、CI 和公开发布准备材料。
-- 保留现有连接器的个人账号隔离、敏感操作审阅、请求去重和写后读回流程。
+- Documented the 14 WPS product entries and their personal-cloud capability boundaries.
+- Added verified WPS document links and official form management/filling link rules to results.
+- Added an open-source license, contribution and security guidance, CI, and publication preparation materials.
+- Preserved per-user credential isolation, sensitive-action review, request deduplication, and post-write verification.
 
 ## 0.6.0 — 2026-10-22
 
-- 新增 `wps_product_guide`，按截图中的产品名称指引个人云端可用工具与未开放入口。
+- Added `wps_product_guide` to route product names to available personal-cloud tools and explicit gaps.
 
 ## 0.5.0 — 2026-10-22
 
-- 补充问卷 14 种题型说明，自动提取 WPS 返回的安全链接。
+- Documented the 14 form question types and extracted safe links from WPS responses.
 
-更早的历史验证记录见 `docs/ITERATIONS-0.4.md` 与 `docs/VALIDATION-0.3.md`。
+Earlier validation records are in `docs/ITERATIONS-0.4.md` and `docs/VALIDATION-0.3.md`.

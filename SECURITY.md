@@ -1,15 +1,15 @@
-# 安全政策
+# Security policy
 
-## 支持范围
+## Supported versions
 
-优先修复当前主分支及最新发布版本中的身份隔离、凭据处理、未经授权的云文档访问、重复写入和链接泄漏问题。旧版本可能只接受迁移建议。
+We prioritize the latest main branch and release for identity isolation, credential handling, unauthorized cloud-file access, duplicate writes, and link leaks. Older versions may receive migration guidance only.
 
-## 报告漏洞
+## Reporting a vulnerability
 
-请使用 GitHub 仓库的 **Report a vulnerability** 私密报告入口；若仓库尚未启用该入口，请先通过仓库维护者的公开联系方式请求私密沟通方式。不要在公开 Issue 中发布令牌、授权码、私人文件内容、可利用的请求样例或个人数据。
+Use the repository's **Report a vulnerability** private reporting flow. If it is unavailable, ask the maintainer for a private contact channel before sharing details. Do not publish tokens, authorization codes, private file content, exploit requests, or personal data in a public issue.
 
-报告可包含受影响版本、重现步骤、预期/实际行为和风险范围，但请使用测试账号及脱敏数据。维护者会先确认收到报告，再协调修复与披露时间。
+A report can include the affected version, reproduction steps, expected and actual behavior, and impact. Use test accounts and redacted data. The maintainer will acknowledge the report and coordinate a fix and disclosure timeline.
 
-## 部署者注意
+## Deployment boundary
 
-本项目现有实现只信任受控 Sites 平台注入的用户身份。匿名公开部署或直接信任客户端提交的 `oai-authenticated-user-id` 会破坏账号隔离。自行托管者必须接入独立认证、保护数据库与密钥，并限制可调用的敏感操作。
+The current implementation trusts user identity only when injected by the controlled Sites platform. Deploying it anonymously or trusting a client-supplied `oai-authenticated-user-id` header would break account isolation. Self-hosters must add independently verified authentication, protect the database and encryption key, and restrict sensitive actions.

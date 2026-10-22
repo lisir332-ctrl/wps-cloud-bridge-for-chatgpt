@@ -1,21 +1,21 @@
-name: 功能建议
-description: 提出有官方云端接口证据的功能改进
+name: Feature request
+description: Suggest a cloud feature with evidence from an official WPS API
 title: '[Feature] '
 labels: ['enhancement']
 body:
   - type: textarea
     id: goal
     attributes:
-      label: 用户目标
-      description: 请描述想在 ChatGPT 中完成的 WPS 任务
+      label: User goal
+      description: What WPS task should work from ChatGPT?
     validations:
       required: true
   - type: input
     id: source
     attributes:
-      label: 官方接口或文档链接
-      description: 网页按钮不等于个人云端接口已开放；请尽量给出官方接口说明
+      label: Official API or documentation link
+      description: A website button alone does not establish a personal-cloud API
   - type: textarea
     id: validation
     attributes:
-      label: 建议的读回验证方式
+      label: Suggested readback or verification

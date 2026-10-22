@@ -8,21 +8,23 @@
 | --- | --- |
 | 稳定标识 | `wps-cloud-bridge` |
 | 展示名称 | WPS Cloud Bridge |
-| 英文副标题 | Work with your WPS cloud files |
+| 英文副标题 | Use WPS cloud files in ChatGPT |
 | 英文说明 | Connect your personal WPS cloud account to find, read, create, and edit supported documents in ChatGPT. The plugin returns WPS links and checks results after writes. Available operations depend on the connected account and WPS cloud API. Independent community project; not endorsed by WPS or OpenAI. |
 | 分类 | Productivity |
 | 默认提示 1 | Find my recent WPS cloud documents. |
 | 默认提示 2 | Create a Word document about tea tasting and give me its WPS link. |
 | 默认提示 3 | Draft a university sleep survey in WPS and show me the questions. |
-| `repository` | 公开 GitHub 仓库 URL；待创建后填写 |
+| `repository` | `https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt` |
 | `websiteURL` | 公开可访问的产品介绍页面；待公开部署后填写 |
 | `supportURL` | 维护者支持页面或 GitHub Issues；待仓库创建后填写 |
 | `privacyPolicyURL` | 经发布者确认的正式隐私政策 URL；待确认 |
 | `termsOfServiceURL` | 经发布者确认的正式服务条款 URL；待确认 |
-| `developerName` | 必须与验证身份一致；待用户确认 |
+| `developerName` | Sergio；提交前须与完成验证的开发者身份一致 |
 | `logo`、`composerIcon` | `assets/bridge.svg`；提交包中路径需 `./assets/bridge.svg` |
 
 GitHub 地址应填在插件清单的 `repository` 字段并可从产品网站访问。不要把“给仓库点星”写进工具指令或用户任务回执；目录说明应聚焦实际功能。[插件元数据要求](https://developers.openai.com/plugins/deploy/submission)
+
+**当前审核阻碍：**OpenAI 的插件指南明确说以未经官方授权的第三方连接器为主要功能的插件不能获批。本项目目前是独立实现的 WPS 连接器；公开目录提交前须取得足以证明此集成获 WPS 授权的依据，并重新核对个人 SkillHub 的公开分发条款。开源 GitHub 仓库的发布与商店获批是不同事项。[官方插件指南](https://developers.openai.com/plugins/plugin-guidelines)
 
 ## 审核用正向用例
 

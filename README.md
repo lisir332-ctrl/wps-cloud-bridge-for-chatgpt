@@ -1,36 +1,40 @@
-# WPS Cloud Bridge
+# WPS Cloud Bridge for ChatGPT
 
-面向 ChatGPT 的个人 WPS 云文档连接器。用户授权自己的金山文档账号后，可在对话中搜索、读取、创建和修改云端文档，并获得 WPS 文件链接与读回结果。本项目由社区独立开发，**并非金山办公或 OpenAI 的官方产品**。
+[English](README.md) · [简体中文](README.zh-CN.md)
 
-## 当前能力
+An open-source connector that lets people work with their **personal WPS cloud documents from ChatGPT**. After connecting a WPS account, users can find, read, create, and edit supported cloud files in conversation. The connector returns real WPS links and checks results after writes.
 
-| 产品 | 云端接口范围 |
+**Independent community project. Not made by or endorsed by WPS or OpenAI.** This repository is public source code; the hosted connector is currently private. A public ChatGPT Directory listing has **not** been approved or published. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) say unofficial third-party connectors are not eligible for approval without appropriate authorization.
+
+## What it covers
+
+| WPS product | Current cloud path |
 | --- | --- |
-| 文字、表格、演示、PDF | 文件创建与读取、结构化编辑、格式或转换操作，按具体工具权限执行 |
-| 智能文档、智能表格 | OTL 块操作、KSHEET 表格操作 |
-| 智能表单 | 草稿创建、读取、更新、发布；支持当前接口的 14 种题型 |
-| 多维表格 | 字段、记录、视图和 Form 视图，分享操作单独审阅 |
-| AI PPT | 分轮生成、处理中断与任务结果核对 |
+| Writer, Spreadsheets, Presentations, PDF | Cloud file operations and structured editing or conversion, subject to account permissions |
+| Smart Documents and Smart Spreadsheets | OTL block operations and KSHEET spreadsheet operations |
+| Smart Forms | Draft creation, reading, updating, and publishing; 14 question types currently exposed |
+| Multi-dimensional Tables | Fields, records, views, and a separate Form-view workflow |
+| AI PPT | Session-based generation with interruption and task-state handling |
 
-连接器收录了 2026-10-22 从 WPS 个人 SkillHub 获取的 **619 项工具目录快照**。目录有工具不等于每个账号都具备相应权限或会员额度，也不代表已经逐项完成真实账号验收。思维导图、流程图、海报、语音速记和 WPS 笔记目前没有纳入此个人云端通道的原生操作。[14 个产品入口与操作路径](docs/PRODUCT-GUIDE.md) · [详细使用经验](docs/USAGE.md)
+The catalog contains a snapshot of **619 tools** discovered from WPS's personal SkillHub on 2026-10-22. A tool's presence does not prove that every account can use it, that a membership entitlement is available, or that every operation has passed a live-account test. Native cloud editing for mind maps, flowcharts, posters, voice notes, and WPS Notes is not exposed through this personal-cloud path. See the [product guide](docs/PRODUCT-GUIDE.md) and [usage notes](docs/USAGE.md).
 
-## 使用方式
+## How it works
 
-1. 在受支持的托管环境中打开连接页，按页面提示授权个人 WPS 账号。
-2. 在 ChatGPT 中启用对应 MCP 插件，直接提出任务，例如“创建一份介绍品茶的 Word”或“列出最近的云文档”。
-3. 连接器先读取目标和准确工具参数，再执行操作；写入使用唯一请求编号，完成后读回并返回可打开的 WPS 链接。
+1. Sign in to the supported hosting environment and connect your own WPS account on its minimal authorization page.
+2. In ChatGPT, select the companion MCP connection and ask for an outcome, such as “Create a Word document introducing tea tasting” or “Find my recent WPS files.”
+3. The connector resolves the target and exact tool schema, performs the requested cloud operation, reads back what it can verify, and returns a usable WPS link.
 
-连接页面仅处理授权、状态与断开；文档操作在 ChatGPT 对话中完成。问卷默认停留在草稿，发布、删除、分享、权限变更及可能产生付费消耗的操作有独立审阅步骤。免费与会员能力以 WPS 的实际业务响应为准。
+The authorization page handles connection, status, and disconnect only. Work happens in the ChatGPT conversation. Forms remain drafts by default. Publishing, deletion, sharing, permission changes, and operations that may consume a paid entitlement receive separate review. Free and member capabilities are determined from WPS's actual response.
 
-## 运行与安全边界
+## Security and hosting
 
-当前部署使用 Sites 提供的可信 ChatGPT 用户身份、D1 数据库和服务器端加密密钥。`POST /mcp` 提供工具发现与调用；用户身份只从**可信托管平台注入的身份信息**取得，不能从请求正文、URL 或普通客户端自填 Header 接受。WPS 凭据按用户隔离后加密保存；文档正文和令牌不进入执行去重表。
+The current deployment relies on a **trusted Sites-injected ChatGPT identity**, a D1 database, and a server-side encryption key. `POST /mcp` exposes tool discovery and calls. User identity is not accepted from the request body or a client-controlled header. WPS credentials are encrypted and isolated per user; the execution deduplication ledger does not store document bodies or tokens.
 
-**不要将本仓库直接作为匿名公开 Worker 部署。** 如果移植到其他平台，必须先接入经过验证的用户身份与授权层，并保证边缘代理移除客户端伪造的身份头。公开 ChatGPT 插件目录还需要符合其 OAuth、域名、隐私与审核要求；当前私有站点不是可直接公开上架的配置。[部署与公开发布边界](docs/DEPLOYMENT.md)
+**Do not deploy this repository as an anonymous public Worker.** A different host needs a verified identity layer and a proxy that strips forged identity headers. Public ChatGPT Directory submission also needs a reviewable authentication flow, a verified publisher, policy URLs, a demo account, and WPS authorization for a public third-party integration. See [deployment and publication boundaries](docs/DEPLOYMENT.md).
 
-## 开发
+## Develop locally
 
-需要 Node.js 22.13+ 和 pnpm。安装依赖后使用：
+Requires Node.js 22.13+ and pnpm. The checked-in public hosting config uses a zero-value project ID. Replace it with your own project ID before deploying to Sites.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -39,8 +43,12 @@ node tests/run.mjs
 pnpm exec tsc --noEmit
 ```
 
-本仓库包含 Site 专用构建设置和数据库迁移。首次部署前提供 D1 `DB` 绑定、64 位十六进制的 `WPS_ENCRYPTION_KEY`、HTTPS `SITE_ORIGIN`，并建立可信用户身份注入。不要提交 `.env`、密钥、个人 WPS 数据或数据库导出。构建成功、模拟回归通过与真实个人账号验收是三种不同证据。[源码结构及本地配置](docs/DEPLOYMENT.md) · [协议说明](docs/PROTOCOL.md)
+Bind D1 as `DB`, set `SITE_ORIGIN` to the final HTTPS origin, and supply a 32-byte random `WPS_ENCRYPTION_KEY` as a 64-character hex secret. Never commit tokens, private files, database exports, or live secrets. A successful build, simulated tests, and live WPS account verification are distinct evidence. See [deployment](docs/DEPLOYMENT.md) and [protocol](docs/PROTOCOL.md).
 
-## 参与与许可
+## Community
 
-欢迎报告问题和贡献代码。提交前请阅读 [贡献指南](CONTRIBUTING.md)、[社区行为准则](CODE_OF_CONDUCT.md)、[安全报告方式](SECURITY.md) 和 [第三方许可说明](THIRD_PARTY_NOTICES.md)。版本变化见 [更新记录](CHANGELOG.md)。本项目代码使用 [MIT License](LICENSE)；第三方组件按各自原始许可保留声明。
+Questions and feature ideas are welcome in [Discussions](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt/discussions). Before contributing, read the [contributing guide](CONTRIBUTING.md), [code of conduct](CODE_OF_CONDUCT.md), [security policy](SECURITY.md), and [third-party notices](THIRD_PARTY_NOTICES.md). See the [changelog](CHANGELOG.md) for version history.
+
+The project is released under the [MIT License](LICENSE). If you find it useful, you can star the [GitHub repository](https://github.com/lisir332-ctrl/wps-cloud-bridge-for-chatgpt) or help improve it.
+
+Maintainer: [Sergio](https://github.com/lisir332-ctrl). Another independent project: [HUC Free AI Hub](https://free.huc.us.ci/).
