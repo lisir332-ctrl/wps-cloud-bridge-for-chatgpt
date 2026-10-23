@@ -4,5 +4,6 @@ declare namespace Cloudflare {
     BUCKET?: R2Bucket;
     WPS_ENCRYPTION_KEY?: string;
     SITE_ORIGIN?: string;
+    PUBLIC_DIRECTORY_MODE?: string;
   }
 }

@@ -5,7 +5,7 @@ import { exchangeWpsCode, WpsError, WpsMcpClient, type McpToolResult } from "./w
 export const APP_VERSION = "0.8.1";
 // This is the bridge's waiting window, not a claim about WPS token lifetime.
 export const AUTH_TTL = 10 * 60_000;
-export type RuntimeEnv = { DB?: D1Database; WPS_ENCRYPTION_KEY?: string; SITE_ORIGIN?: string };
+export type RuntimeEnv = { DB?: D1Database; WPS_ENCRYPTION_KEY?: string; SITE_ORIGIN?: string; PUBLIC_DIRECTORY_MODE?: string };
 export type ConnectionStatus = {
   connected: boolean; status: "not_connected" | "expired" | "connected";
   serviceReady: boolean; upstreamVerified: boolean; version: string;

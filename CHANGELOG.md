@@ -5,6 +5,7 @@
 - Deployed a separate public-access Site with its own database and encryption key; the maintainer's private connection was not copied.
 - Published a configured plugin preview ZIP pointing to the new MCP endpoint, with no WPS credentials in the package.
 - Confirmed OAuth protected-resource metadata and rejection of unauthenticated requests. ChatGPT ZIP upload and second-account WPS access remain unverified; public Directory review has not begun.
+- Added a public-review mode that exposes only separately described MCP tools and rejects generic catalog executors; the private Site retains its full tool set.
 
 ## 0.8.1 — 2026-10-23
 
